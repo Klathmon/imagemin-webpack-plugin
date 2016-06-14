@@ -10,9 +10,15 @@ import imageminSvgo from 'imagemin-svgo'
 function ImageminPlugin (options) {
   // I love ES2015!
   const {
-    optipng = {},
-    gifsicle = {},
-    jpegtran = {},
+    optipng = {
+      optimizationLevel: 3
+    },
+    gifsicle = {
+      optimizationLevel: 1
+    },
+    jpegtran = {
+      progressive: false
+    },
     svgo = {},
     pngquant = null,
     plugins = []
