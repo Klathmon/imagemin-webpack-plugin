@@ -32,6 +32,7 @@
     "imagemin-gifsicle": "^5.1.0",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-optipng": "^5.1.0",
+    "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.1.0",
     "lodash": "^4.13.1",
     "webpack-sources": "^0.1.2"
