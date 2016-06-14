@@ -28,13 +28,16 @@
   },
   "homepage": "https://github.com/Klathmon/imagemin-webpack-plugin#readme",
   "dependencies": {
-    "imagemin": "5.2.1",
-    "imagemin-gifsicle": "5.1.0",
-    "imagemin-jpegtran": "5.0.2",
-    "imagemin-optipng": "5.1.0",
-    "imagemin-svgo": "5.1.0",
-    "lodash": "4.13.1",
-    "webpack-sources": "0.1.2"
+    "imagemin": "^5.2.1",
+    "imagemin-gifsicle": "^5.1.0",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-optipng": "^5.1.0",
+    "imagemin-svgo": "^5.1.0",
+    "lodash": "^4.13.1",
+    "webpack-sources": "^0.1.2"
+  },
+  "peerDependencies": {
+    "webpack": "^1.13.1 || ^2.0"
   },
   "devDependencies": {
     "babel-cli": "6.10.1",
