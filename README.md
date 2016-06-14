@@ -42,7 +42,7 @@ Includes the following imagemin plugins:
 * [gifsicle](https://github.com/imagemin/imagemin-gifsicle)
 * [jpegtran](https://github.com/imagemin/imagemin-jpegtran)
 * [svgo](https://github.com/imagemin/imagemin-svgo)
-* [pngquant](https://github.com/imagemin/imagemin-pngquant)
+* [pngquant](https://github.com/imagemin/imagemin-pngquant) - (only enabled if you pass in options for it)
 
 #### `plugins`
 
