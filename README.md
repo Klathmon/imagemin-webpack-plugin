@@ -78,7 +78,7 @@ Maybe... I'm trying to keep this a small single-purpose plugin, but if you want 
 
 ## Contributing
 
-The code is written in ES6 using [Javascript Standard Style](https://github.com/feross/standard). Feel free to make PRs adding features you want, but please try to follow Standard.
+The code is written in ES6 using [Javascript Standard Style](https://github.com/feross/standard). Feel free to make PRs adding features you want, but please try to follow Standard. Also, codumentation/readme PRs are more then welcome!
 
 ## License
 
