@@ -36,9 +36,6 @@
     "lodash": "^4.13.1",
     "webpack-sources": "^0.1.2"
   },
-  "peerDependencies": {
-    "webpack": "^1.13.1 || ^2.0"
-  },
   "devDependencies": {
     "babel-cli": "6.10.1",
     "babel-eslint": "6.0.4",
