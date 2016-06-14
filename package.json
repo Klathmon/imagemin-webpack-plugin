@@ -1,0 +1,28 @@
+{
+  "name": "webpack-imagemin-plugin",
+  "version": "0.0.1",
+  "description": "Webpack plugin to compress images",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Klathmon/webpack-imagemin-plugin.git"
+  },
+  "author": "Gregory Benner <gregbenner1@gmail.com> (https://github.com/Klathmon)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Klathmon/webpack-imagemin-plugin/issues"
+  },
+  "homepage": "https://github.com/Klathmon/webpack-imagemin-plugin#readme",
+  "dependencies": {
+    "imagemin": "5.2.1",
+    "imagemin-gifsicle": "5.1.0",
+    "imagemin-jpegtran": "5.0.2",
+    "imagemin-optipng": "5.1.0",
+    "imagemin-svgo": "5.1.0",
+    "lodash": "4.13.1",
+    "webpack-sources": "0.1.2"
+  }
+}
