@@ -65,7 +65,7 @@ Provide any additional plugins you want to have Imagemin run, and their options.
 #### `disable`
 
 Pass `disable: true` to disable this plugin, like during development. Defaults to `false`.
-```
+
 
 ## FAQ
 
