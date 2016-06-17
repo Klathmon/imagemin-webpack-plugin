@@ -15,20 +15,22 @@ var ImageminPlugin = require('imagemin-webpack-plugin')
 module.exports = {
   plugins: [
     // Make sure that the plugin is after any plugins that add images
+    // These are the default options:
     new ImageminPlugin({
+      disable: false,
       optipng: {
-        optimizationLevel: 7
-      },
-      gifsicle: {
         optimizationLevel: 3
       },
+      gifsicle: {
+        optimizationLevel: 1
+      },
       jpegtran: {
+        progressive: false
       },
       svgo: {
       },
-      pngquant: {
-        quality: '95-100'
-      }
+      pngquant: null, // pngquant is not run unless you pass options here
+      plugins: []
     })
   ]
 }
@@ -58,6 +60,11 @@ Provide any additional plugins you want to have Imagemin run, and their options.
     })
   ]
 }
+```
+
+#### `disable`
+
+Pass `disable: true` to disable this plugin, like during development. Defaults to `false`.
 ```
 
 ## FAQ

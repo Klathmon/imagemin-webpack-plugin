@@ -10,6 +10,7 @@ import imageminSvgo from 'imagemin-svgo'
 function ImageminPlugin (options) {
   // I love ES2015!
   const {
+    disable = false,
     optipng = {
       optimizationLevel: 3
     },
@@ -25,13 +26,16 @@ function ImageminPlugin (options) {
   } = options
 
   this.options = {
-    // Enable these by default, just pass what they give me as the options (or nothing)
-    plugins: [
-      imageminOptipng(optipng),
-      imageminGifsicle(gifsicle),
-      imageminJpegtran(jpegtran),
-      imageminSvgo(svgo)
-    ]
+    disable,
+    imageminOptions: {
+      // Enable these by default, just pass what they give me as the options (or nothing)
+      plugins: [
+        imageminOptipng(optipng),
+        imageminGifsicle(gifsicle),
+        imageminJpegtran(jpegtran),
+        imageminSvgo(svgo)
+      ]
+    }
   }
 
   // Only enable these if they pass in options for it...
@@ -42,6 +46,9 @@ function ImageminPlugin (options) {
 }
 
 ImageminPlugin.prototype.apply = function (compiler) {
+  // If disabled, short-circuit here and just return
+  if (this.options.disable === true) return null
+
   // "this-compilation" seems to be the secret plugin event that i need to grab to only get
   // everything once... I'm honestly not sure why it works, but i saw it at the below link.
   // https://github.com/webpack/compression-webpack-plugin/blob/ee8e701e47b2f488da32b135abe88a47972487de/index.js#L55
@@ -56,7 +63,7 @@ ImageminPlugin.prototype.apply = function (compiler) {
         // Ensure that the contents i have are in the form of a buffer
         const assetContents = (Buffer.isBuffer(assetSource) ? assetSource : new Buffer(assetSource, 'utf8'))
         // push it into imagemin with the options setup up top
-        return imagemin.buffer(assetContents, this.options)
+        return imagemin.buffer(assetContents, this.options.imageminOptions)
           .then((optimizedAssetContents) => {
             // If we are bigger (or equal) after "optimization", don't touch the file...
             if (optimizedAssetContents.length >= assetOrigSize) return Promise.resolve()
