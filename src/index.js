@@ -39,10 +39,10 @@ function ImageminPlugin (options) {
   }
 
   // Only enable these if they pass in options for it...
-  if (pngquant !== null) this.options.plugins.push(imageminPngquant(pngquant))
+  if (pngquant !== null) this.options.imageminOptions.plugins.push(imageminPngquant(pngquant))
 
   // And finally, add any plugins that they pass in the options to the internal plugins array
-  this.options.plugins.push(...plugins)
+  this.options.imageminOptions.plugins.push(...plugins)
 }
 
 ImageminPlugin.prototype.apply = function (compiler) {
