@@ -7,7 +7,7 @@ import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
 import imageminSvgo from 'imagemin-svgo'
 
-function ImageminPlugin (options) {
+function ImageminPlugin (options = {}) {
   // I love ES2015!
   const {
     disable = false,
