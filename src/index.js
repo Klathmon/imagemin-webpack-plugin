@@ -80,4 +80,4 @@ ImageminPlugin.prototype.apply = function (compiler) {
   })
 }
 
-export default ImageminPlugin
+module.exports = ImageminPlugin
