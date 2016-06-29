@@ -10,7 +10,9 @@ This is a simple plugin that uses [Imagemin](https://github.com/imagemin/imagemi
 
 ## Usage
 ```js
-var ImageminPlugin = require('imagemin-webpack-plugin')
+var ImageminPlugin = require('imagemin-webpack-plugin').default
+// Or if using ES2015:
+// import ImageminPlugin from 'imagemin-webpack-plugin'
 
 module.exports = {
   plugins: [
