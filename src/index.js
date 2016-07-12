@@ -73,9 +73,11 @@ ImageminPlugin.prototype.apply = function (compiler) {
             // https://github.com/webpack/compression-webpack-plugin/blob/ee8e701e47b2f488da32b135abe88a47972487de/index.js#L82
             assets[filename] = new RawSource(optimizedAssetContents)
           })
+          .catch((err) => callback(err))
       }))
       // And once everything is done, go ahead and call the callback.
       .then(() => callback())
+      .catch((err) => callback(err))
     })
   })
 }
