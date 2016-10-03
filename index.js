@@ -30,6 +30,7 @@ function ImageminPlugin (options = {}) {
 
   this.options = {
     disable,
+    maxConcurrency,
     imageminOptions: {
       plugins: []
     }
