@@ -6,7 +6,7 @@ import imageminOptipng from 'imagemin-optipng'
 import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
 import imageminSvgo from 'imagemin-svgo'
-import os from 'os';
+import { cpus } from 'os'
 import createThrottle from 'async-throttle'
 
 function ImageminPlugin (options = {}) {
@@ -24,7 +24,7 @@ function ImageminPlugin (options = {}) {
     },
     svgo = {},
     pngquant = null,
-    maxConcurrency = os.cpus().length,
+    maxConcurrency = cpus().length,
     plugins = []
   } = options
 
@@ -63,7 +63,7 @@ ImageminPlugin.prototype.apply = function (compiler) {
     const throttle = createThrottle(this.options.maxConcurrency)
 
     try {
-      await Promise.all(map(compilation.assets, throttle(async (asset, filename) => {
+      await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
         compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
       })))
 
