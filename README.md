@@ -31,7 +31,7 @@ module.exports = {
       },
       svgo: {
       },
-      pngquant: null, // pngquant is not run unless you pass options here,
+      pngquant: null, // pngquant is not run unless you pass options here
       plugins: []
     })
   ]
