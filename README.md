@@ -55,6 +55,13 @@ To disable a default plugin, pass `null` as it's option object. For example, the
 }
 ```
 
+At default it would spawn an imagemin process for each cpu-core. But you can override it with maxConcurrency:
+```js
+{
+  maxConcurrency: 2
+}
+```
+
 #### `plugins`
 
 Provide any additional plugins you want to have Imagemin run, and their options. Ex:
