@@ -20,7 +20,8 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      "es2015",
+      "stage-1"
     ]
   },
   "author": "Gregory Benner <gregbenner1@gmail.com> (https://github.com/Klathmon)",
@@ -36,13 +37,13 @@
     "imagemin-optipng": "^5.1.0",
     "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.1.0",
-    "lodash": "^4.13.1",
     "webpack-sources": "^0.1.2"
   },
   "devDependencies": {
     "babel-cli": "6.10.1",
     "babel-eslint": "6.0.4",
     "babel-preset-es2015": "6.9.0",
+    "babel-preset-stage-1": "6.16.0",
     "gulp": "3.9.1",
     "gulp-npm-script-sync": "1.1.0",
     "gulp-run-command": "0.0.6",
