@@ -6,6 +6,8 @@ import imageminOptipng from 'imagemin-optipng'
 import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
 import imageminSvgo from 'imagemin-svgo'
+import os from 'os';
+import createThrottle from 'async-throttle'
 
 function ImageminPlugin (options = {}) {
   // I love ES2015!
@@ -22,6 +24,7 @@ function ImageminPlugin (options = {}) {
     },
     svgo = {},
     pngquant = null,
+    maxConcurrency = os.cpus().length,
     plugins = []
   } = options
 
@@ -56,11 +59,12 @@ ImageminPlugin.prototype.apply = function (compiler) {
 
   // Access the assets once they have been assembled
   compiler.plugin('emit', async (compilation, callback) => {
+    const throttle = createThrottle(this.options.maxConcurrency)
+
     try {
-      // TODO: at some point I need to throttle the number of running optimizations
-      await Promise.all(map(compilation.assets, async (asset, filename) => {
+      await Promise.all(map(compilation.assets, throttle(async (asset, filename) => {
         compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
-      }))
+      })))
 
       // At this point everything is done, so call the callback without anything in it
       callback()

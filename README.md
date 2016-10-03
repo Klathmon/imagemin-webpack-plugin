@@ -31,7 +31,7 @@ module.exports = {
       },
       svgo: {
       },
-      pngquant: null, // pngquant is not run unless you pass options here
+      pngquant: null, // pngquant is not run unless you pass options here,
       plugins: []
     })
   ]
@@ -52,6 +52,13 @@ To disable a default plugin, pass `null` as it's option object. For example, the
 ``` js
 {
   svgo: null
+}
+```
+
+At default it would spawn an imagemin process for each cpu-core. But you can override it with maxConcurrency:
+```js
+{
+  maxConcurrency: 2
 }
 ```
 
