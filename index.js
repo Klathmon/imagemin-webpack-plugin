@@ -1,3 +1,4 @@
+import map from 'lodash.map'
 import RawSource from 'webpack-sources/lib/RawSource'
 import imagemin from 'imagemin'
 import imageminPngquant from 'imagemin-pngquant'
@@ -56,23 +57,9 @@ ImageminPlugin.prototype.apply = function (compiler) {
   // Access the assets once they have been assembled
   compiler.plugin('emit', async (compilation, callback) => {
     try {
-      // Map over all assets here async and await for all of them to complete before moving on
-      // TODO: Might want to look into throttling this if it overwhelms some systems...
-      await Promise.all(compilation.assets.map(async (asset, filename) => {
-        // Grab the orig source and size
-        const assetSource = asset.source()
-        const assetOrigSize = asset.size()
-        // Ensure that the contents i have are in the form of a buffer
-        const assetContents = ensureBuffer(assetSource)
-
-        // Await for imagemin to do the compression
-        const optimizedAssetContents = await imagemin.buffer(assetContents, this.options.imageminOptions)
-
-        // If the optimization actually produced a smaller file, then overwrite the existing asset
-        // with the optimized version
-        if (optimizedAssetContents.length < assetOrigSize) {
-          compilation.assets[filename] = new RawSource(optimizedAssetContents)
-        }
+      // TODO: at some point I need to throttle the number of running optimizations
+      await Promise.all(map(compilation.assets, async (asset, filename) => {
+        compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
       }))
 
       // At this point everything is done, so call the callback without anything in it
@@ -85,10 +72,22 @@ ImageminPlugin.prototype.apply = function (compiler) {
 
 export default ImageminPlugin
 
-function ensureBuffer (maybeBuffer) {
-  if (Buffer.isBuffer(maybeBuffer)) {
-    return maybeBuffer
+async function optimizeImage (asset, imageminOptions) {
+  // Grab the orig source and size
+  const assetSource = asset.source()
+  const assetOrigSize = asset.size()
+
+  // Ensure that the contents i have are in the form of a buffer
+  const assetContents = (Buffer.isBuffer(assetSource) ? assetSource : new Buffer(assetSource, 'utf8'))
+
+  // Await for imagemin to do the compression
+  const optimizedAssetContents = await imagemin.buffer(assetContents, imageminOptions)
+
+  // If the optimization actually produced a smaller file, then return the optimized version
+  if (optimizedAssetContents.length < assetOrigSize) {
+    return new RawSource(optimizedAssetContents)
   } else {
-    return new Buffer(maybeBuffer, 'utf8')
+    // otherwize return the orignal
+    return asset
   }
 }

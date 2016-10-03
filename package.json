@@ -19,6 +19,9 @@
     "parser": "babel-eslint"
   },
   "babel": {
+    "plugins": [
+      "transform-runtime"
+    ],
     "presets": [
       "es2015",
       "stage-1"
@@ -31,17 +34,20 @@
   },
   "homepage": "https://github.com/Klathmon/imagemin-webpack-plugin#readme",
   "dependencies": {
+    "babel-runtime": "6.11.6",
     "imagemin": "^5.2.1",
     "imagemin-gifsicle": "^5.1.0",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-optipng": "^5.1.0",
     "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.1.0",
+    "lodash.map": "4.6.0",
     "webpack-sources": "^0.1.2"
   },
   "devDependencies": {
     "babel-cli": "6.10.1",
     "babel-eslint": "6.0.4",
+    "babel-plugin-transform-runtime": "6.15.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-stage-1": "6.16.0",
     "gulp": "3.9.1",
