@@ -25,21 +25,27 @@ function ImageminPlugin (options = {}) {
     plugins = []
   } = options
 
+
   this.options = {
     disable,
     imageminOptions: {
-      // Enable these by default, just pass what they give me as the options (or nothing)
-      plugins: [
-        imageminOptipng(optipng),
-        imageminGifsicle(gifsicle),
-        imageminJpegtran(jpegtran),
-        imageminSvgo(svgo)
-      ]
+      plugins: []
     }
   }
 
-  // Only enable these if they pass in options for it...
-  if (pngquant !== null) this.options.imageminOptions.plugins.push(imageminPngquant(pngquant))
+  // As long as the options aren't `null` then include the plugin. Let the destructuring above
+  // control whether the plugin is included by default or not.
+  for (let [plugin, pluginOptions] of [
+    [imageminOptipng, optipng],
+    [imageminGifsicle, gifsicle],
+    [imageminJpegtran, jpegtran],
+    [imageminSvgo, svgo],
+    [imageminPngquant, pngquant]
+  ]) {
+    if (pluginOptions !== null) {
+      this.options.imageminOptions.plugins.push(plugin(pluginOptions))
+    }
+  }
 
   // And finally, add any plugins that they pass in the options to the internal plugins array
   this.options.imageminOptions.plugins.push(...plugins)
