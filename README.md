@@ -48,6 +48,13 @@ Includes the following imagemin plugins:
 * [svgo](https://github.com/imagemin/imagemin-svgo)
 * [pngquant](https://github.com/imagemin/imagemin-pngquant) - (only enabled if you pass in options for it)
 
+To disable a default plugin, pass `null` as it's option object. For example, the below options will only run optipng, gifscale, and jpegtran with the default settings (without running svgo):
+``` js
+{
+  svgo: null
+}
+```
+
 #### `plugins`
 
 Provide any additional plugins you want to have Imagemin run, and their options. Ex:
