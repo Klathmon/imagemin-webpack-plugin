@@ -6,6 +6,7 @@ import imageminOptipng from 'imagemin-optipng'
 import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
 import imageminSvgo from 'imagemin-svgo'
+import path from 'path'
 import { cpus } from 'os'
 import createThrottle from 'async-throttle'
 
@@ -58,12 +59,16 @@ ImageminPlugin.prototype.apply = function (compiler) {
   // If disabled, short-circuit here and just return
   if (this.options.disable === true) return null
 
+  const validExts = ['.jpg', '.jpeg', '.png', '.gif', '.svg']
+
   // Access the assets once they have been assembled
   compiler.plugin('emit', async (compilation, callback) => {
     const throttle = createThrottle(this.options.maxConcurrency)
 
     try {
       await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
+        if (validExts.indexOf(path.extname(filename).toLowerCase()) === -1) return
+
         compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
       })))
 
