@@ -7,7 +7,7 @@ const SOURCEFILE = resolve('.', 'index.js')
 const OUTFILE = resolve('.', 'index.es5.js')
 
 gulp.task('clean', run(`rimraf ${OUTFILE}`))
-gulp.task('test', run('echo "No tests specified"'))
+gulp.task('test', run('standard ./index.js'))
 gulp.task('build', ['clean'], run(`babel ${SOURCEFILE} --out-file ${OUTFILE}`))
 
 for (let versionType of ['Major', 'Minor', 'Patch']) {
