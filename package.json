@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/Klathmon/imagemin-webpack-plugin#readme",
   "dependencies": {
-    "async-throttle": "zeit/async-throttle#596dc23b4ac2598cfed4d30289fb75c29f8d57fe",
+    "async-throttle": "^1.0.0",
     "babel-runtime": "^6.18.0",
     "imagemin": "^5.2.1",
     "imagemin-gifsicle": "^5.1.0",
