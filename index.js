@@ -37,7 +37,7 @@ export default class ImageminPlugin {
       imageminOptions: {
         plugins: []
       },
-      testRegex: compileTestOption(test)
+      testRegexes: compileTestOption(test)
     }
 
     // As long as the options aren't `null` then include the plugin. Let the destructuring above
@@ -63,7 +63,7 @@ export default class ImageminPlugin {
     if (this.options.disable === true) return null
 
     // Pull out the regex test
-    const testRegex = this.options.testRegex
+    const testRegexes = this.options.testRegexes
 
     // Access the assets once they have been assembled
     compiler.plugin('emit', async (compilation, callback) => {
@@ -72,7 +72,8 @@ export default class ImageminPlugin {
       try {
         await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
           // Skip the image if it's not a match for the regex
-          if (testRegex.test(filename)) {
+          if (testFile(filename, testRegexes)) {
+            console.log(filename)
             compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
           }
         })))
@@ -113,27 +114,37 @@ async function optimizeImage (asset, imageminOptions) {
 }
 
 /**
+ * Tests a filename to see if it matches any of the given test globs/regexes
+ * @param  {String} filename
+ * @param  {Array} regexes
+ * @return {Boolean}
+ */
+function testFile (filename, regexes) {
+  for (let regex of regexes) {
+    if (regex.test(filename)) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
  * Compiles a regex, glob, or an array of globs to a single regex for testing later
  * @param  {RegExp|String|String[]} rawTestValue
  * @return {RegExp}
  */
 function compileTestOption (rawTestValue) {
-  const errorMessage = 'test parameter must be a regex, glob string, or an array of glob strings'
-  if (rawTestValue instanceof RegExp) {
-    // If it's a regex, just return it
-    return rawTestValue
-  } else if (typeof rawTestValue === 'string') {
-    // if it's a string, let minimatch convert it to a regex
-    return makeRe(rawTestValue)
-  } else if (Array.isArray(rawTestValue)) {
-    try {
-      // if it's an array of strings, then compile them all to a single regex and return that
-      return new RegExp(rawTestValue.map((test) => makeRe(test).source).join('|'))
-    } catch (err) {
-      throw new Error(errorMessage + ` "${err}"`)
-    }
-  }
+  const tests = Array.isArray(rawTestValue) ? rawTestValue : [rawTestValue]
 
-  // If we get here then something is wrong with what was passed into `test`, so throw since we can't deal with it
-  throw new Error(errorMessage)
+  return tests.map((test) => {
+    if (test instanceof RegExp) {
+      // If it's a regex, just return it
+      return test
+    } else if (typeof test === 'string') {
+      // If it's a string, let minimatch convert it to a regex
+      return makeRe(test)
+    } else {
+      throw new Error('test parameter must be a regex, glob string, or an array of regexes or glob strings')
+    }
+  })
 }
