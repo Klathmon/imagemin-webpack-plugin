@@ -7,9 +7,7 @@
     "clean": "gulp clean",
     "test": "gulp test",
     "build": "gulp build",
-    "publishMajor": "gulp publishMajor",
-    "publishMinor": "gulp publishMinor",
-    "publishPatch": "gulp publishPatch"
+    "prepublish": "gulp build"
   },
   "engines": {
     "node": ">=4.0.0"

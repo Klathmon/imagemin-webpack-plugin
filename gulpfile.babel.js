@@ -10,8 +10,4 @@ gulp.task('clean', run(`rimraf ${OUTFILE}`))
 gulp.task('test', run('standard ./index.js'))
 gulp.task('build', ['clean'], run(`babel ${SOURCEFILE} --out-file ${OUTFILE}`))
 
-for (let versionType of ['Major', 'Minor', 'Patch']) {
-  gulp.task(`publish${versionType}`, ['clean', 'build'], run(`np ${versionType.toLowerCase()} --skip-cleanup`))
-}
-
 sync(gulp)
