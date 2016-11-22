@@ -7,7 +7,8 @@
     "clean": "gulp clean",
     "test": "gulp test",
     "build": "gulp build",
-    "prepublish": "gulp build"
+    "prepublish": "gulp build",
+    "preversion": "gulp build"
   },
   "engines": {
     "node": ">=4.0.0"
