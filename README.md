@@ -1,4 +1,3 @@
-
 # Imagemin plugin for Webpack
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -8,7 +7,6 @@ This is a simple plugin that uses [Imagemin](https://github.com/imagemin/imagemi
 ## Install
 
 `npm install imagemin-webpack-plugin`
-
 
 ## Example Usage
 ```js
