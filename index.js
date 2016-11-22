@@ -25,15 +25,19 @@ function ImageminPlugin (options = {}) {
     svgo = {},
     pngquant = null,
     maxConcurrency = cpus().length,
-    plugins = []
+    plugins = [],
+    test: testRegex = /.*/
   } = options
+
+  // TODO: Eventually allow globs and arrays to be passed as a test here and compile them to regex before moving on to the next part
 
   this.options = {
     disable,
     maxConcurrency,
     imageminOptions: {
       plugins: []
-    }
+    },
+    testRegex
   }
 
   // As long as the options aren't `null` then include the plugin. Let the destructuring above
@@ -58,13 +62,19 @@ ImageminPlugin.prototype.apply = function (compiler) {
   // If disabled, short-circuit here and just return
   if (this.options.disable === true) return null
 
+  // Pull out the regex test
+  const testRegex = this.options.testRegex
+
   // Access the assets once they have been assembled
   compiler.plugin('emit', async (compilation, callback) => {
     const throttle = createThrottle(this.options.maxConcurrency)
 
     try {
       await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
-        compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
+        // Skip the image if it's not a match for the regex
+        if (testRegex.test(filename)) {
+          compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
+        }
       })))
 
       // At this point everything is done, so call the callback without anything in it
