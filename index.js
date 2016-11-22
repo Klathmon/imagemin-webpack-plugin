@@ -16,6 +16,8 @@ export default class ImageminPlugin {
     const {
       disable = false,
       test = /.*/,
+      maxConcurrency = cpus().length,
+      plugins = [],
       optipng = {
         optimizationLevel: 3
       },
@@ -26,9 +28,7 @@ export default class ImageminPlugin {
         progressive: false
       },
       svgo = {},
-      pngquant = null,
-      maxConcurrency = cpus().length,
-      plugins = []
+      pngquant = null
     } = options
 
     this.options = {
