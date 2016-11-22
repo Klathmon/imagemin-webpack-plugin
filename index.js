@@ -13,6 +13,7 @@ function ImageminPlugin (options = {}) {
   // I love ES2015!
   const {
     disable = false,
+    test: testRegex = /.*/,
     optipng = {
       optimizationLevel: 3
     },
@@ -25,8 +26,7 @@ function ImageminPlugin (options = {}) {
     svgo = {},
     pngquant = null,
     maxConcurrency = cpus().length,
-    plugins = [],
-    test: testRegex = /.*/
+    plugins = []
   } = options
 
   // TODO: Eventually allow globs and arrays to be passed as a test here and compile them to regex before moving on to the next part
