@@ -11,7 +11,7 @@ gulp.task('test', run('echo "No tests specified"'))
 gulp.task('build', ['clean'], run(`babel ${SOURCEFILE} --out-file ${OUTFILE}`))
 
 for (let versionType of ['Major', 'Minor', 'Patch']) {
-  gulp.task(`publish${versionType}`, ['clean', 'build'], run(`np --skip-cleanup ${versionType.toLowerCase()}`))
+  gulp.task(`publish${versionType}`, ['clean', 'build'], run(`np ${versionType.toLowerCase()} --skip-cleanup`))
 }
 
 sync(gulp)
