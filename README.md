@@ -44,7 +44,7 @@ When set to `true` it will disable the plugin entirely. This is useful for disab
 **type**: `RegExp` or `String` or `Array`  
 **default**: `/.*/`
 
-This plugin will only run on files that match this test. This is similar to the webpack loader `test` option (but is not using the same implementation, so there might be major differences!). This can either be a RegExp object, or a minimatch glob (or an array of either or both).
+This plugin will only run on files that match this test. This is similar to the webpack loader `test` option (but is not using the same implementation, so there might be major differences!). This can either be a RegExp object, or a [minimatch glob](https://github.com/isaacs/minimatch) (or an array of either or both).
 
 This can allow you to only run the plugin on specific files, or even include the plugin multiple times for different sets of images and apply different imagemin settings to each.
 
