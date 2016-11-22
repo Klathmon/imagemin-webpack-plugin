@@ -20,6 +20,7 @@ module.exports = {
     // These are the default options:
     new ImageminPlugin({
       disable: false,
+      test: /.*/,
       optipng: {
         optimizationLevel: 3
       },
@@ -59,6 +60,13 @@ At default it would spawn an imagemin process for each cpu-core. But you can ove
 ```js
 {
   maxConcurrency: 2
+}
+```
+
+To limit the images that are processed by this plugin, pass in a Regex as `test` and only filenames that match that will be optimized by imagemin:
+```js
+{
+  test: /\.gif|(?:pn|jpe?)g$/i // Only optimize files ending in gif, jpg, jpeg, and png
 }
 ```
 
