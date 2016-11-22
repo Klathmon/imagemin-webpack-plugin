@@ -137,9 +137,9 @@ async-each@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
 
-async-throttle@zeit/async-throttle#596dc23b4ac2598cfed4d30289fb75c29f8d57fe:
-  version "0.0.1"
-  resolved "https://codeload.github.com/zeit/async-throttle/tar.gz/596dc23b4ac2598cfed4d30289fb75c29f8d57fe"
+async-throttle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/async-throttle/-/async-throttle-1.0.0.tgz#eaf533ba73b4b89d7c14ead3af18a130e2a6a467"
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -2993,15 +2993,15 @@ mime-types@^2.1.12, mime-types@~2.1.7:
   dependencies:
     mime-db "~1.25.0"
 
-minimatch, minimatch@^3.0.0, minimatch@^3.0.2, "minimatch@2 || 3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.3.tgz#2a4e4090b96b2db06a9d7df01055a62a77c9b774"
-  dependencies:
-    brace-expansion "^1.0.0"
-
 minimatch@^2.0.1:
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-2.0.10.tgz#8d087c39c6b38c001b97fca7ce6d0e1e80afbac7"
+  dependencies:
+    brace-expansion "^1.0.0"
+
+minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, "minimatch@2 || 3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.3.tgz#2a4e4090b96b2db06a9d7df01055a62a77c9b774"
   dependencies:
     brace-expansion "^1.0.0"
 
