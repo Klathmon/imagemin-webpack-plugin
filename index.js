@@ -73,7 +73,6 @@ export default class ImageminPlugin {
         await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
           // Skip the image if it's not a match for the regex
           if (testFile(filename, testRegexes)) {
-            console.log(filename)
             compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
           }
         })))
