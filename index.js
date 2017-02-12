@@ -62,28 +62,38 @@ export default class ImageminPlugin {
     // If disabled, short-circuit here and just return
     if (this.options.disable === true) return null
 
-    // Pull out the regex test
-    const testRegexes = this.options.testRegexes
-
     // Access the assets once they have been assembled
+    compiler.plugin('normal-module-factory', (nmf) => {
+      nmf.plugin('after-resolve', (data, callback) => {
+        if (testFile(data.request, this.options.testRegexes)) {
+          console.log(data)
+        }
+        callback(null, data)
+      })
+    })
     compiler.plugin('emit', async (compilation, callback) => {
-      const throttle = createThrottle(this.options.maxConcurrency)
-
       try {
-        await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
-          // Skip the image if it's not a match for the regex
-          if (testFile(filename, testRegexes)) {
-            compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
-          }
-        })))
-
-        // At this point everything is done, so call the callback without anything in it
-        callback()
+        await runForEvent(compilation.assets, this.options)
+        callback() // At this point everything is done, so call the callback without anything in it
       } catch (err) {
         callback(err)
       }
     })
   }
+}
+
+async function runForEvent (assetsArray, options) {
+  const throttle = createThrottle(options.maxConcurrency)
+
+  return Promise.all(map(assetsArray, (asset, filename) => throttle(async () => {
+    // Skip the image if it's not a match for the regex
+    console.log(`testing file ${filename}`)
+    if (testFile(filename, options.testRegexes)) {
+      console.log(`test passed, optimizing ${filename}, size: ${asset._value.length}`)
+      assetsArray[filename] = await optimizeImage(asset, options.imageminOptions)
+      console.log(`done optimizing ${filename}, size: ${assetsArray[filename]._value.length}`)
+    }
+  })))
 }
 
 /**
