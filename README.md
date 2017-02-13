@@ -14,6 +14,7 @@ This is a simple plugin that uses [Imagemin](https://github.com/imagemin/imagemi
 Requires node >=4.0.0
 
 ## Example Usage
+
 ```js
 var ImageminPlugin = require('imagemin-webpack-plugin').default
 // Or if using ES2015:
@@ -30,7 +31,20 @@ module.exports = {
     })
   ]
 }
+```
 
+Working with [copy-webpack-plugin](https://github.com/kevlened/copy-webpack-plugin):
+
+```js
+module.exports = {
+  plugins: [
+    // Copy the images folder and optimize all the images
+    new CopyWebpackPlugin([{
+      from: 'images/'
+    }]),
+    new ImageminWebpackPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
+  ]
+}
 ```
 
 ## API
@@ -71,8 +85,9 @@ module.exports = {
     })
   ]
 }
-
 ```
+
+Note the order of the plugins matters. `CopyWebpackPlugin` must be before `ImageminWebpackPlugin` in the `plugins` array.
 
 #### options.maxConcurrency
 
