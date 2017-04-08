@@ -122,7 +122,7 @@ Passes the given object to [`imagemin-jpegtran`](https://github.com/imagemin/ima
 **type**: `Object` or `null`  
 **default**: `{}`
 
-Passes the given object to [`imagemin-optipng`](https://github.com/imagemin/imagemin-svgo). Set to `null` to disable svgo.
+Passes the given object to [`imagemin-svgo`](https://github.com/imagemin/imagemin-svgo). Set to `null` to disable svgo.
 
 #### options.pngquant
 
