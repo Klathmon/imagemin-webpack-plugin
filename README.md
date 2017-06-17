@@ -42,7 +42,7 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: 'images/'
     }]),
-    new ImageminWebpackPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
+    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
   ]
 }
 ```
@@ -158,7 +158,32 @@ module.exports = {
     })
   ]
 }
+```
 
+#### options.externalImages
+
+**type**: `Object`
+**default**: `{ sources: [], destination: null }`
+
+Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
+If a destination value is not supplied the files are optimized in place.
+
+Example: 
+
+```js
+import ImageminPlugin from 'imagemin-webpack-plugin'
+import glob from 'glob'
+
+module.exports = {
+  plugins: [
+    new ImageminPlugin({
+      externalFiles: {
+        sources: glob.sync('src/images/**/*.png'),
+        destination: 'src/public/images'
+      }
+    })
+  ]
+}
 ```
 
 ### Troubleshooting
