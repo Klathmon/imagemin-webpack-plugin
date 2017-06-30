@@ -1,16 +1,16 @@
+import fs from 'fs'
+import path from 'path'
+import { cpus } from 'os'
 import map from 'lodash.map'
-import RawSource from 'webpack-sources/lib/RawSource'
 import imagemin from 'imagemin'
-import imageminPngquant from 'imagemin-pngquant'
+import { makeRe } from 'minimatch'
+import imageminSvgo from 'imagemin-svgo'
+import createThrottle from 'async-throttle'
 import imageminOptipng from 'imagemin-optipng'
+import imageminPngquant from 'imagemin-pngquant'
 import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
-import imageminSvgo from 'imagemin-svgo'
-import { cpus } from 'os'
-import createThrottle from 'async-throttle'
-import { makeRe } from 'minimatch'
-import fs from 'fs';
-import path from 'path';
+import RawSource from 'webpack-sources/lib/RawSource'
 
 export default class ImageminPlugin {
   constructor (options = {}) {
@@ -71,7 +71,7 @@ export default class ImageminPlugin {
 
     // Pull out the regex test
     const testRegexes = this.options.testRegexes
-    const externalImages = this.options.externalImages;
+    const externalImages = this.options.externalImages
 
     // Access the assets once they have been assembled
     compiler.plugin('emit', async (compilation, callback) => {
@@ -85,19 +85,19 @@ export default class ImageminPlugin {
           }
         })))
 
-        //Additionally optimize user specified file list
+        // Additionally optimize user specified file list
         if (externalImages && externalImages.sources && Array.isArray(externalImages.sources) && externalImages.sources.length) {
           await Promise.all(map(externalImages.sources, (filename) => throttle(async () => {
-            const buffer =  await readFile(filename);
-            const optimizedAssetContents = await imagemin.buffer(buffer, this.options.imageminOptions);
+            const buffer = await readFile(filename)
+            const optimizedAssetContents = await imagemin.buffer(buffer, this.options.imageminOptions)
 
             // if a destination was provided use it otherwise overwrite in place
             if (externalImages.destination && typeof externalImages.destination === 'string') {
-              filename = path.normalize(`${externalImages.destination}/${path.basename(filename)}`);
+              filename = path.normalize(`${externalImages.destination}/${path.basename(filename)}`)
             }
-            await writeFile(filename, optimizedAssetContents);
+            await writeFile(filename, optimizedAssetContents)
           })))
-        } 
+        }
 
         // At this point everything is done, so call the callback without anything in it
         callback()
@@ -171,61 +171,57 @@ function compileTestOption (rawTestValue) {
 }
 
 /**
- * async wrapper for fs readFile.  
- * @param {any} filename 
+ * async wrapper for fs readFile.
+ * @param {any} filename
  * @returns * @return {Promise(buffer)}
  */
-async function readFile(filename) {
+async function readFile (filename) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, '', (error, result) => {
       if (error) {
-        reject(error);
-        return;
+        return reject(error)
       }
-      resolve(result);
-    });
-  });
+      resolve(result)
+    })
+  })
 }
 
 /**
  * async wrapper for exists
- * @param {any} directory 
- * @returns 
+ * @param {any} directory
+ * @returns
  */
-async function exists(directory) {
+async function exists (directory) {
   return new Promise((resolve, reject) => {
     fs.exists(directory, (exists) => {
-      resolve(exists);
-    });
-  });
+      resolve(exists)
+    })
+  })
 }
 
 /**
  * async wrapper for writeFile
- * @param {any} filename 
- * @param {any} buffer 
- * @returns 
+ * @param {any} filename
+ * @param {any} buffer
+ * @returns
  */
-async function writeFile(filename, buffer) {
+async function writeFile (filename, buffer) {
   return new Promise((resolve, reject) => {
-
     const doWrite = () => {
       fs.writeFile(filename, buffer, (error) => {
         if (error) {
-          reject(error);
-          return;
+          return reject(error)
         }
-        resolve();
-      });
-    };
-    const directory = path.dirname(filename);
+        resolve()
+      })
+    }
+    const directory = path.dirname(filename)
     exists(directory).then((exists) => {
       if (!exists) {
-        fs.mkdir(directory, doWrite);
+        fs.mkdir(directory, doWrite)
       } else {
-        doWrite();
+        doWrite()
       }
-    });
-  });
+    })
+  })
 }
-
