@@ -86,7 +86,7 @@ export default class ImageminPlugin {
         })))
 
         // Additionally optimize user specified file list
-        if (externalImages && externalImages.sources && Array.isArray(externalImages.sources) && externalImages.sources.length) {
+        if ('sources' in externalImages && Array.isArray(externalImages.sources)) {
           await Promise.all(map(externalImages.sources, (filename) => throttle(async () => {
             const buffer = await readFile(filename)
             const optimizedAssetContents = await imagemin.buffer(buffer, this.options.imageminOptions)
