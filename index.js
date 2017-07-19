@@ -78,27 +78,10 @@ export default class ImageminPlugin {
       const throttle = createThrottle(this.options.maxConcurrency)
 
       try {
-        await Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
-          // Skip the image if it's not a match for the regex
-          if (testFile(filename, testRegexes)) {
-            compilation.assets[filename] = await optimizeImage(asset, this.options.imageminOptions)
-          }
-        })))
-
-        // Additionally optimize user specified file list
-        if ('sources' in externalImages && Array.isArray(externalImages.sources)) {
-          await Promise.all(map(externalImages.sources, (filename) => throttle(async () => {
-            const buffer = await readFile(filename)
-            const optimizedAssetContents = await imagemin.buffer(buffer, this.options.imageminOptions)
-
-            // if a destination was provided use it otherwise overwrite in place
-            if (externalImages.destination && typeof externalImages.destination === 'string') {
-              filename = path.normalize(`${externalImages.destination}/${path.basename(filename)}`)
-            }
-            await writeFile(filename, optimizedAssetContents)
-          })))
-        }
-
+        await Promise.all([
+          optimizeWebpackImages(throttle, compilation, testRegexes, this.options.imageminOptions),
+          optimizeExternalImages(throttle, externalImages.sources, externalImages.destination, this.options.imageminOptions)
+        ])
         // At this point everything is done, so call the callback without anything in it
         callback()
       } catch (err) {
@@ -109,28 +92,69 @@ export default class ImageminPlugin {
 }
 
 /**
- * Optimizes a single image asset, returning the orignal if the "optimized" version is larger
- * @param  {Object}  asset
+ * Optimize images from webpack and put them back in the asset array when done
+ * @param  {Function} throttle       The setup throttle library
+ * @param  {Object} compilation      The compilation from webpack-sources
+ * @param  {Regex} testRegexes       The regex to match if a specific image should be optimized
+ * @param  {Object} imageminOptions  Options to pass to imageminOptions
+ * @return {Promise}                 Resolves when all images are done being optimized
+ */
+async function optimizeWebpackImages (throttle, compilation, testRegexes, imageminOptions) {
+  return Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
+    // Skip the image if it's not a match for the regex
+    if (testFile(filename, testRegexes)) {
+      // Optimize the asset's source
+      const optimizedImageBuffer = await optimizeImage(asset.source(), imageminOptions)
+      // Then write the optimized version back to the asset object as a "raw source"
+      compilation.assets[filename] = new RawSource(optimizedImageBuffer)
+    }
+  })))
+}
+
+/**
+ * Optimizes external images,
+ * @param  {[type]} throttle        [description]
+ * @param  {[type]} sources         [description]
+ * @param  {[type]} destination     [description]
+ * @param  {[type]} imageminOptions [description]
+ * @return {[type]}                 [description]
+ */
+async function optimizeExternalImages (throttle, sources, destination, imageminOptions) {
+  return Promise.all(map(sources, (filename) => throttle(async () => {
+    // Read in the file and optimize it
+    const optimizedImageBuffer = await optimizeImage(await readFile(filename), imageminOptions)
+
+    // Then if the destination is provided use it, otherwise overwrite the image in place
+    if (typeof destination !== 'string') {
+      destination = '.'
+    }
+    const writeFilePath = path.normalize(`${destination}/${filename}`)
+
+    return writeFile(writeFilePath, optimizedImageBuffer)
+  })))
+}
+
+/**
+ * Optimizes a single image, returning the orignal if the "optimized" version is larger
+ * @param  {Object}  imageData
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-async function optimizeImage (asset, imageminOptions) {
-  // Grab the orig source and size
-  const assetSource = asset.source()
-  const assetOrigSize = asset.size()
-
+async function optimizeImage (imageData, imageminOptions) {
   // Ensure that the contents i have are in the form of a buffer
-  const assetContents = (Buffer.isBuffer(assetSource) ? assetSource : new Buffer(assetSource, 'utf8'))
+  const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
+  // And get the original size for comparison later to make sure it actually got smaller
+  const originalSize = imageBuffer.length
 
   // Await for imagemin to do the compression
-  const optimizedAssetContents = await imagemin.buffer(assetContents, imageminOptions)
+  const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
 
   // If the optimization actually produced a smaller file, then return the optimized version
-  if (optimizedAssetContents.length < assetOrigSize) {
-    return new RawSource(optimizedAssetContents)
+  if (optimizedImageBuffer.length < originalSize) {
+    return optimizedImageBuffer
   } else {
     // otherwize return the orignal
-    return asset
+    return imageBuffer
   }
 }
 
@@ -193,8 +217,10 @@ async function readFile (filename) {
  */
 async function exists (directory) {
   return new Promise((resolve, reject) => {
-    fs.exists(directory, (exists) => {
-      resolve(exists)
+    fs.access(directory, fs.constants.R_OK | fs.constants.W_OK, (err) => {
+      if (err) resolve(false)
+
+      resolve(true)
     })
   })
 }

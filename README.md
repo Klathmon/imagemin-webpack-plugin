@@ -168,7 +168,7 @@ module.exports = {
 Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
 If a destination value is not supplied the files are optimized in place.
 
-Example: 
+Example:
 
 ```js
 import ImageminPlugin from 'imagemin-webpack-plugin'
