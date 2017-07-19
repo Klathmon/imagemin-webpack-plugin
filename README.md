@@ -177,7 +177,7 @@ import glob from 'glob'
 module.exports = {
   plugins: [
     new ImageminPlugin({
-      externalFiles: {
+      externalImages: {
         sources: glob.sync('src/images/**/*.png'),
         destination: 'src/public/images'
       }
