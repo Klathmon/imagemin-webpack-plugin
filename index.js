@@ -71,16 +71,22 @@ export default class ImageminPlugin {
 
     // Pull out the regex test
     const testRegexes = this.options.testRegexes
-    const externalImages = this.options.externalImages
+    let { sources, destination } = this.options.externalImages
 
     // Access the assets once they have been assembled
     compiler.plugin('emit', async (compilation, callback) => {
       const throttle = createThrottle(this.options.maxConcurrency)
+      if (typeof sources === 'function') {
+        sources = await sources()
+      }
+      if (typeof destination === 'function') {
+        destination = await destination()
+      }
 
       try {
         await Promise.all([
           optimizeWebpackImages(throttle, compilation, testRegexes, this.options.imageminOptions),
-          optimizeExternalImages(throttle, externalImages.sources, externalImages.destination, this.options.imageminOptions)
+          optimizeExternalImages(throttle, sources, destination, this.options.imageminOptions)
         ])
         // At this point everything is done, so call the callback without anything in it
         callback()
