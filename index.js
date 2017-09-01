@@ -90,7 +90,7 @@ export default class ImageminPlugin {
       try {
         await Promise.all([
           optimizeWebpackImages(throttle, compilation, testRegexes, minFileSize, maxFileSize, this.options.imageminOptions),
-          optimizeExternalImages(throttle, sources, destination, this.options.imageminOptions)
+          optimizeExternalImages(throttle, sources, destination, minFileSize, maxFileSize, this.options.imageminOptions)
         ])
         // At this point everything is done, so call the callback without anything in it
         callback()
@@ -130,20 +130,25 @@ async function optimizeWebpackImages (throttle, compilation, testRegexes, minFil
  * @param  {[type]} sources         [description]
  * @param  {[type]} destination     [description]
  * @param  {[type]} imageminOptions [description]
+ * @param  {[type]} minFileSize     [description]
+ * @param  {[type]} maxFileSize     [description]
  * @return {[type]}                 [description]
  */
-async function optimizeExternalImages (throttle, sources, destination, imageminOptions) {
+async function optimizeExternalImages (throttle, sources, destination, minFileSize, maxFileSize, imageminOptions) {
   return Promise.all(map(sources, (filename) => throttle(async () => {
-    // Read in the file and optimize it
-    const optimizedImageBuffer = await optimizeImage(await readFile(filename), imageminOptions)
+    const fileData = await readFile(filename)
+    if (testFileSize(fileData, minFileSize, maxFileSize)) {
+      // Read in the file and optimize it
+      const optimizedImageBuffer = await optimizeImage(await readFile(filename), imageminOptions)
 
-    // Then if the destination is provided use it, otherwise overwrite the image in place
-    if (typeof destination !== 'string') {
-      destination = '.'
+      // Then if the destination is provided use it, otherwise overwrite the image in place
+      if (typeof destination !== 'string') {
+        destination = '.'
+      }
+      const writeFilePath = path.normalize(`${destination}/${filename}`)
+
+      return writeFile(writeFilePath, optimizedImageBuffer)
     }
-    const writeFilePath = path.normalize(`${destination}/${filename}`)
-
-    return writeFile(writeFilePath, optimizedImageBuffer)
   })))
 }
 
@@ -187,7 +192,7 @@ function testFile (filename, regexes) {
 }
 
 function testFileSize (assetSource, minFileSize, maxFileSize) {
-  return assetSource.length >= minFileSize && assetSource.length <= maxFileSize
+  return assetSource.length > minFileSize && assetSource.length <= maxFileSize
 }
 
 /**
