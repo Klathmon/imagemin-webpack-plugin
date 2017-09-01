@@ -18,6 +18,8 @@ export default class ImageminPlugin {
     const {
       disable = false,
       test = /.*/,
+      minFileSize = 0,
+      maxFileSize = Infinity,
       maxConcurrency = cpus().length,
       plugins = [],
       optipng = {
@@ -40,6 +42,8 @@ export default class ImageminPlugin {
     this.options = {
       disable,
       maxConcurrency,
+      minFileSize,
+      maxFileSize,
       imageminOptions: {
         plugins: []
       },
@@ -69,8 +73,8 @@ export default class ImageminPlugin {
     // If disabled, short-circuit here and just return
     if (this.options.disable === true) return null
 
-    // Pull out the regex test
-    const testRegexes = this.options.testRegexes
+    // Pull out options needed here
+    const { testRegexes, minFileSize, maxFileSize } = this.options
     let { sources, destination } = this.options.externalImages
 
     // Access the assets once they have been assembled
@@ -85,8 +89,8 @@ export default class ImageminPlugin {
 
       try {
         await Promise.all([
-          optimizeWebpackImages(throttle, compilation, testRegexes, this.options.imageminOptions),
-          optimizeExternalImages(throttle, sources, destination, this.options.imageminOptions)
+          optimizeWebpackImages(throttle, compilation, testRegexes, minFileSize, maxFileSize, this.options.imageminOptions),
+          optimizeExternalImages(throttle, sources, destination, minFileSize, maxFileSize, this.options.imageminOptions)
         ])
         // At this point everything is done, so call the callback without anything in it
         callback()
@@ -102,15 +106,18 @@ export default class ImageminPlugin {
  * @param  {Function} throttle       The setup throttle library
  * @param  {Object} compilation      The compilation from webpack-sources
  * @param  {Regex} testRegexes       The regex to match if a specific image should be optimized
+ * @param  {Integer} minFileSize     The minimum size of a file in bytes (files under this size will be skipped)
+ * @param  {Integer} maxFileSize     The maximum size of a file in bytes (files over this size will be skipped)
  * @param  {Object} imageminOptions  Options to pass to imageminOptions
  * @return {Promise}                 Resolves when all images are done being optimized
  */
-async function optimizeWebpackImages (throttle, compilation, testRegexes, imageminOptions) {
+async function optimizeWebpackImages (throttle, compilation, testRegexes, minFileSize, maxFileSize, imageminOptions) {
   return Promise.all(map(compilation.assets, (asset, filename) => throttle(async () => {
+    const assetSource = asset.source()
     // Skip the image if it's not a match for the regex
-    if (testFile(filename, testRegexes)) {
+    if (testFile(filename, testRegexes) && testFileSize(assetSource, minFileSize, maxFileSize)) {
       // Optimize the asset's source
-      const optimizedImageBuffer = await optimizeImage(asset.source(), imageminOptions)
+      const optimizedImageBuffer = await optimizeImage(assetSource, imageminOptions)
       // Then write the optimized version back to the asset object as a "raw source"
       compilation.assets[filename] = new RawSource(optimizedImageBuffer)
     }
@@ -123,20 +130,25 @@ async function optimizeWebpackImages (throttle, compilation, testRegexes, imagem
  * @param  {[type]} sources         [description]
  * @param  {[type]} destination     [description]
  * @param  {[type]} imageminOptions [description]
+ * @param  {[type]} minFileSize     [description]
+ * @param  {[type]} maxFileSize     [description]
  * @return {[type]}                 [description]
  */
-async function optimizeExternalImages (throttle, sources, destination, imageminOptions) {
+async function optimizeExternalImages (throttle, sources, destination, minFileSize, maxFileSize, imageminOptions) {
   return Promise.all(map(sources, (filename) => throttle(async () => {
-    // Read in the file and optimize it
-    const optimizedImageBuffer = await optimizeImage(await readFile(filename), imageminOptions)
+    const fileData = await readFile(filename)
+    if (testFileSize(fileData, minFileSize, maxFileSize)) {
+      // Read in the file and optimize it
+      const optimizedImageBuffer = await optimizeImage(await readFile(filename), imageminOptions)
 
-    // Then if the destination is provided use it, otherwise overwrite the image in place
-    if (typeof destination !== 'string') {
-      destination = '.'
+      // Then if the destination is provided use it, otherwise overwrite the image in place
+      if (typeof destination !== 'string') {
+        destination = '.'
+      }
+      const writeFilePath = path.normalize(`${destination}/${filename}`)
+
+      return writeFile(writeFilePath, optimizedImageBuffer)
     }
-    const writeFilePath = path.normalize(`${destination}/${filename}`)
-
-    return writeFile(writeFilePath, optimizedImageBuffer)
   })))
 }
 
@@ -177,6 +189,10 @@ function testFile (filename, regexes) {
     }
   }
   return false
+}
+
+function testFileSize (assetSource, minFileSize, maxFileSize) {
+  return assetSource.length > minFileSize && assetSource.length <= maxFileSize
 }
 
 /**
