@@ -133,7 +133,7 @@ Passes the given object to [`imagemin-pngquant`](https://github.com/imagemin/ima
 
 #### options.plugins
 
-**type**: `Array`
+**type**: `Array`  
 **default**: `[]`
 
 Include any additional plugins that you want to work with imagemin here. By default the above are included, but if you want (or need to) you can disable them (by setting them to `null`) and include them yourself here.
@@ -162,7 +162,7 @@ module.exports = {
 
 #### options.externalImages
 
-**type**: `Object`
+**type**: `Object`  
 **default**: `{ sources: [], destination: null }`
 
 Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
@@ -181,6 +181,41 @@ module.exports = {
         sources: glob.sync('src/images/**/*.png'),
         destination: 'src/public/images'
       }
+    })
+  ]
+}
+```
+#### options.minFileSize
+
+**type**: `Integer`  
+**default**: `0`
+
+Only apply to images that are **larger** than this value *in bytes*.
+
+#### options.maxFileSize
+
+**type**: `Integer`  
+**default**: `Infinity`
+
+Only apply to images that are **smaller than or equal-to** this value *in bytes*.
+
+This and `minFileSize` together can be used to include WebpackImageminPlugin multiple times with multiple configs on different file sizes.
+
+Example:
+
+```js
+import ImageminPlugin from 'imagemin-webpack-plugin'
+import glob from 'glob'
+
+module.exports = {
+  plugins: [
+    new ImageminPlugin({
+      maxFileSize: 10000, // Only apply this one to files equal to or under 10kb
+      jpegtran: { progressive: false }
+    }),
+    new ImageminPlugin({
+      minFileSize: 10000, // Only apply this one to files over 10kb
+      jpegtran: { progressive: true }
     })
   ]
 }
