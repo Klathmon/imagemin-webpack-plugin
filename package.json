@@ -41,17 +41,17 @@
   },
   "homepage": "https://github.com/Klathmon/imagemin-webpack-plugin#readme",
   "dependencies": {
-    "async-throttle": "1.1.0",
+    "async-throttle": "^1.1.0",
     "babel-runtime": "^6.18.0",
-    "imagemin": "5.3.1",
+    "imagemin": "^5.3.1",
     "imagemin-gifsicle": "^5.1.0",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-optipng": "^5.1.0",
-    "imagemin-pngquant": "5.0.1",
-    "imagemin-svgo": "5.2.2",
+    "imagemin-pngquant": "^5.0.1",
+    "imagemin-svgo": "^5.2.2",
     "lodash.map": "^4.6.0",
-    "minimatch": "3.0.4",
-    "webpack-sources": "1.0.1"
+    "minimatch": "^3.0.4",
+    "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -59,11 +59,11 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "gulp": "3.9.1",
-    "gulp-npm-script-sync": "1.1.0",
-    "gulp-run-command": "0.0.7",
-    "np": "2.16.0",
-    "rimraf": "2.6.1",
-    "standard": "10.0.2"
+    "gulp": "^3.9.1",
+    "gulp-npm-script-sync": "^1.1.0",
+    "gulp-run-command": "^0.0.7",
+    "np": "^2.16.0",
+    "rimraf": "^2.6.1",
+    "standard": "^10.0.2"
   }
 }
