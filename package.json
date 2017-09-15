@@ -44,11 +44,6 @@
     "async-throttle": "^1.1.0",
     "babel-runtime": "^6.18.0",
     "imagemin": "^5.3.1",
-    "imagemin-gifsicle": "^5.1.0",
-    "imagemin-jpegtran": "^5.0.2",
-    "imagemin-optipng": "^5.1.0",
-    "imagemin-pngquant": "^5.0.1",
-    "imagemin-svgo": "^5.2.2",
     "lodash.map": "^4.6.0",
     "minimatch": "^3.0.4",
     "webpack-sources": "^1.0.1"

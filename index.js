@@ -4,12 +4,7 @@ import { cpus } from 'os'
 import map from 'lodash.map'
 import imagemin from 'imagemin'
 import { makeRe } from 'minimatch'
-import imageminSvgo from 'imagemin-svgo'
 import createThrottle from 'async-throttle'
-import imageminOptipng from 'imagemin-optipng'
-import imageminPngquant from 'imagemin-pngquant'
-import imageminGifsicle from 'imagemin-gifsicle'
-import imageminJpegtran from 'imagemin-jpegtran'
 import RawSource from 'webpack-sources/lib/RawSource'
 
 export default class ImageminPlugin {
@@ -22,17 +17,6 @@ export default class ImageminPlugin {
       maxFileSize = Infinity,
       maxConcurrency = cpus().length,
       plugins = [],
-      optipng = {
-        optimizationLevel: 3
-      },
-      gifsicle = {
-        optimizationLevel: 1
-      },
-      jpegtran = {
-        progressive: false
-      },
-      svgo = {},
-      pngquant = null,
       externalImages = {
         sources: [],
         destination: null
@@ -49,20 +33,6 @@ export default class ImageminPlugin {
       },
       testRegexes: compileTestOption(test),
       externalImages
-    }
-
-    // As long as the options aren't `null` then include the plugin. Let the destructuring above
-    // control whether the plugin is included by default or not.
-    for (let [plugin, pluginOptions] of [
-      [imageminOptipng, optipng],
-      [imageminGifsicle, gifsicle],
-      [imageminJpegtran, jpegtran],
-      [imageminSvgo, svgo],
-      [imageminPngquant, pngquant]
-    ]) {
-      if (pluginOptions !== null) {
-        this.options.imageminOptions.plugins.push(plugin(pluginOptions))
-      }
     }
 
     // And finally, add any plugins that they pass in the options to the internal plugins array
