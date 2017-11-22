@@ -145,6 +145,7 @@ async function optimizeExternalImages (throttle, sources, destination, minFileSi
       if (typeof destination !== 'string') {
         destination = '.'
       }
+      filename = path.basename(filename);
       const writeFilePath = path.normalize(`${destination}/${filename}`)
 
       return writeFile(writeFilePath, optimizedImageBuffer)
