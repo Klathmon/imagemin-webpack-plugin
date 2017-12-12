@@ -127,7 +127,7 @@ export default class ImageminPlugin {
       if (testFile(filename, testRegexes) && testFileSize(assetSource, minFileSize, maxFileSize)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = getFromCacheIfPossible(cacheFolder, filename, () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, () => {
           return optimizeImage(assetSource, this.options.imageminOptions)
         })
 
@@ -162,7 +162,7 @@ export default class ImageminPlugin {
 
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = getFromCacheIfPossible(cacheFolder, filename, async () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, async () => {
           return optimizeImage(await readFile(filename), this.options.imageminOptions)
         })
 
