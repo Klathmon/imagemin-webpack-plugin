@@ -2,13 +2,13 @@
   "name": "imagemin-webpack-plugin",
   "version": "1.5.2",
   "description": "Webpack plugin to compress images",
-  "main": "index.es5.js",
+  "main": "dist/index.js",
   "scripts": {
-    "clean": "gulp clean",
-    "test": "gulp test",
-    "build": "gulp build",
-    "prepublish": "gulp build",
-    "preversion": "gulp build"
+    "clean": "rimraf dist",
+    "test": "standard src/*",
+    "build": "babel src --out-dir dist",
+    "prepublish": "babel src --out-dir dist",
+    "preversion": "babel src --out-dir dist"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -61,9 +61,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "gulp": "^3.9.1",
-    "gulp-npm-script-sync": "^1.1.0",
-    "gulp-run-command": "^0.0.7",
     "np": "^2.16.0",
     "rimraf": "^2.6.1",
     "standard": "^10.0.2"
