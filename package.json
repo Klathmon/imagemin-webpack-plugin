@@ -1,13 +1,13 @@
 {
   "name": "imagemin-webpack-plugin",
-  "version": "1.6.0-0",
+  "version": "1.6.0-beta.1",
   "description": "Webpack plugin to compress images",
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist",
     "test": "standard src/*",
     "build": "babel src --out-dir dist --source-maps",
-    "prepublish": "babel src --out-dir dist --source-maps",
+    "prepare": "babel src --out-dir dist --source-maps",
     "preversion": "babel src --out-dir dist --source-maps"
   },
   "engines": {
