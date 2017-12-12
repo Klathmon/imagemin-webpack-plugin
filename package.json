@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "test": "standard src/*",
-    "build": "babel src --out-dir dist",
-    "prepublish": "babel src --out-dir dist",
-    "preversion": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist --source-maps",
+    "prepublish": "babel src --out-dir dist --source-maps",
+    "preversion": "babel src --out-dir dist --source-maps"
   },
   "engines": {
     "node": ">=4.0.0"
