@@ -104,8 +104,9 @@ export function invokeIfFunction (func) {
  * @return {Buffer}
  */
 export async function getFromCacheIfPossible (cacheFolder, filename, elseFunc) {
-  const cacheFilePath = path.resolve(cacheFolder, filename)
+  let cacheFilePath
   if (cacheFolder !== null) {
+    cacheFilePath = path.resolve(cacheFolder, filename)
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }
