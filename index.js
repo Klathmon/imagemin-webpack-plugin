@@ -13,6 +13,7 @@ import {
   compileRegex,
   testFile,
   testFileSize,
+  invokeIfFunction,
   getFromCacheIfPossible,
   readFile,
   writeFile,
@@ -152,10 +153,12 @@ export default class ImageminPlugin {
       cacheFolder
     } = this.options
 
-    return map(sources, (filename) => throttle(async () => {
+    const invokedDestination = invokeIfFunction(destination)
+
+    return map(invokeIfFunction(sources), (filename) => throttle(async () => {
       const fileData = await readFile(filename)
       if (testFileSize(fileData, minFileSize, maxFileSize)) {
-        const writeFilePath = path.resolve(destination, filename)
+        const writeFilePath = path.resolve(invokedDestination, filename)
 
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
