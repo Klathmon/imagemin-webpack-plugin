@@ -51,6 +51,8 @@
     "imagemin-svgo": "^5.2.2",
     "lodash.map": "^4.6.0",
     "minimatch": "^3.0.4",
+    "mkdirp": "^0.5.1",
+    "util.promisify": "^1.0.0",
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
