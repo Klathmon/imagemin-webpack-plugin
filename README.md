@@ -221,6 +221,30 @@ module.exports = {
 }
 ```
 
+#### options.cacheFolder
+
+**type**: `String`
+**default**: `''`
+
+Cache already minified images into a `cacheFolder`. On next run plugin will
+check for the cached images first. If cached image exists it will simply use that one.
+Otherwise image will be optimised and written to the `cacheFolder` for later builds.
+
+Example:
+
+```js
+import resolve from 'path'
+import ImageminPlugin from 'imagemin-webpack-plugin'
+
+module.exports = {
+  plugins: [
+    new ImageminPlugin({
+      cacheFolder: resolve('./cache'), // use existing folder called cache in the current dir
+    })
+  ]
+}
+```
+
 ### Troubleshooting
 
 If you get an error similar to `Error in parsing SVG: Unquoted attribute value` while using SVGO, you most likely have un-quoted attributes in the SVG image. A workaround can be found [here](https://github.com/Klathmon/imagemin-webpack-plugin/issues/25) from @vzaidman. They also made an issue upstream which should fix it at the source [here](https://github.com/svg/svgo/issues/678).
