@@ -3,7 +3,6 @@
 [![npm](https://img.shields.io/npm/v/imagemin-webpack-plugin.svg)](https://www.npmjs.com/package/imagemin-webpack-plugin)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![npm](https://img.shields.io/npm/dt/imagemin-webpack-plugin.svg)](https://www.npmjs.com/package/imagemin-webpack-plugin)
-[![donate](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://www.coinbase.com/Klathmon)
 
 This is a simple plugin that uses [Imagemin](https://github.com/imagemin/imagemin) to compress all images in your project.
 
