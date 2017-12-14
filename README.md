@@ -53,14 +53,14 @@ module.exports = {
 
 #### options.disable
 
-**type**: `Boolean`  
+**type**: `Boolean`
 **default**: `false`
 
 When set to `true` it will disable the plugin entirely. This is useful for disabling the plugin during development, and only enabling it during production
 
 #### options.test
 
-**type**: `RegExp` or `String` or `Array`  
+**type**: `RegExp` or `String` or `Array`
 **default**: `/.*/`
 
 This plugin will only run on files that match this test. This is similar to the webpack loader `test` option (but is not using the same implementation, so there might be major differences!). This can either be a RegExp object, or a [minimatch glob](https://github.com/isaacs/minimatch) (or an array of either or both).
@@ -91,49 +91,49 @@ Note the order of the plugins matters. `CopyWebpackPlugin` must be before `Image
 
 #### options.maxConcurrency
 
-**type**: `Number`  
+**type**: `Number`
 **default**: the number of logical CPUS on the system
 
 Sets the maximum number of instances of Imagemin that can run at once. Set to `Infinity` to run a seperate process per image all at the same time.
 
 #### options.optipng
 
-**type**: `Object` or `null`  
+**type**: `Object` or `null`
 **default**: `{ optimizationLevel: 3 }`
 
 Passes the given object to [`imagemin-optipng`](https://github.com/imagemin/imagemin-optipng). Set to `null` to disable optipng.
 
 #### options.gifsicle
 
-**type**: `Object` or `null`  
+**type**: `Object` or `null`
 **default**: `{ optimizationLevel: 1 }`
 
 Passes the given object to [`imagemin-gifsicle`](https://github.com/imagemin/imagemin-gifsicle). Set to `null` to disable gifsicle.
 
 #### options.jpegtran
 
-**type**: `Object` or `null`  
+**type**: `Object` or `null`
 **default**: `{ progressive: false }`
 
 Passes the given object to [`imagemin-jpegtran`](https://github.com/imagemin/imagemin-jpegtran). Set to `null` to disable jpegtran.
 
 #### options.svgo
 
-**type**: `Object` or `null`  
+**type**: `Object` or `null`
 **default**: `{}`
 
 Passes the given object to [`imagemin-svgo`](https://github.com/imagemin/imagemin-svgo). Set to `null` to disable svgo.
 
 #### options.pngquant
 
-**type**: `Object` or `null`  
+**type**: `Object` or `null`
 **default**: `null`
 
 Passes the given object to [`imagemin-pngquant`](https://github.com/imagemin/imagemin-pngquant). Disabled by default.
 
 #### options.plugins
 
-**type**: `Array`  
+**type**: `Array`
 **default**: `[]`
 
 Include any additional plugins that you want to work with imagemin here. By default the above are included, but if you want (or need to) you can disable them (by setting them to `null`) and include them yourself here.
@@ -162,7 +162,7 @@ module.exports = {
 
 #### options.externalImages
 
-**type**: `Object`  
+**type**: `Object`
 **default**: `{ sources: [], destination: null }`
 
 Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
@@ -187,14 +187,14 @@ module.exports = {
 ```
 #### options.minFileSize
 
-**type**: `Integer`  
+**type**: `Integer`
 **default**: `0`
 
 Only apply to images that are **larger** than this value *in bytes*.
 
 #### options.maxFileSize
 
-**type**: `Integer`  
+**type**: `Integer`
 **default**: `Infinity`
 
 Only apply to images that are **smaller than or equal-to** this value *in bytes*.
@@ -251,13 +251,13 @@ If you get an error similar to `Error in parsing SVG: Unquoted attribute value` 
 
 ## FAQ
 
-**Why?**  
+**Why?**
 I was suprised that there weren't any Imagemin plugins for webpack, so I made one!
 
-**Why not use [`image-webpack-loader`](https://github.com/tcoopman/image-webpack-loader)?**  
+**Why not use [`image-webpack-loader`](https://github.com/tcoopman/image-webpack-loader)?**
 Because I had other things like the [`favicons-webpack-plugin`](https://github.com/jantimon/favicons-webpack-plugin) and [`responsive-loader`](https://github.com/herrstucki/responsive-loader) that were generating images that I couldn't have `image-webpack-loader` optimize. This plugin will optimize ANY images regardless of how they were added to webpack. Plus `image-webpack-loader` is currently using an older version of imagemin.
 
-**Can you add this new feature?**  
+**Can you add this new feature?**
 Maybe... I'm trying to keep this a small single-purpose plugin, but if you want a feature feel free to open an issue and I'll take a look.
 
 ## Inspiration
@@ -267,7 +267,7 @@ Maybe... I'm trying to keep this a small single-purpose plugin, but if you want 
 
 ## Contributing
 
-The code is written in ES6 using [Javascript Standard Style](https://github.com/feross/standard). Feel free to make PRs adding features you want, but please try to follow Standard. Also, codumentation/readme PRs are more then welcome!
+[See the CONTRIBUTING file here](CONTRIBUTING.md)
 
 ## License
 
