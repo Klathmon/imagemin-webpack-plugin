@@ -225,6 +225,8 @@ module.exports = {
 **type**: `String`
 **default**: `''`
 
+*Currently only in 1.6-beta.1 and newer*
+
 Cache already minified images into a `cacheFolder`. On next run plugin will
 check for the cached images first. If cached image exists it will simply use that one.
 Otherwise image will be optimised and written to the `cacheFolder` for later builds.
