@@ -266,8 +266,8 @@ Maybe... I'm trying to keep this a small single-purpose plugin, but if you want 
 
 ## Inspiration
 
-* Big thanks to [`image-webpack-loader`](https://github.com/tcoopman/image-webpack-loader) for the idea.
-* Used [`compression-webpack-plugin`](https://github.com/webpack/compression-webpack-plugin) to learn how to write the plugin. It's source code is a better tutorial on how to write plugins than the webpack documentation is...
+*   Big thanks to [`image-webpack-loader`](https://github.com/tcoopman/image-webpack-loader) for the idea.
+*   Used [`compression-webpack-plugin`](https://github.com/webpack/compression-webpack-plugin) to learn how to write the plugin. It's source code is a better tutorial on how to write plugins than the webpack documentation is...
 
 ## Contributing
 
