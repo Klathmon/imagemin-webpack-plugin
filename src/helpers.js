@@ -1,5 +1,4 @@
 import fs from 'fs'
-// import path from 'path'
 import path from 'path'
 import { makeRe } from 'minimatch'
 import imagemin from 'imagemin'
@@ -35,7 +34,7 @@ export async function optimizeImage (imageData, imageminOptions) {
 }
 
 /**
- * Compiles a regex, glob, or an array of globs to an array of RegExp
+ * Compiles a regex, glob, or an array of globs to an array of RegExps
  * @param  {RegExp|RegExp[]|String|String[]} rawTestValue
  * @return {RegExp[]}
  */
@@ -110,13 +109,13 @@ export async function getFromCacheIfPossible (cacheFolder, filename, elseFunc) {
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }
-  } else {
-    const fileBuffer = await elseFunc()
-    if (cacheFolder !== null) {
-      await writeFile(cacheFilePath, fileBuffer)
-    }
-    return fileBuffer
   }
+
+  const fileBuffer = await elseFunc()
+  if (cacheFolder !== null) {
+    await writeFile(cacheFilePath, fileBuffer)
+  }
+  return fileBuffer
 }
 
 /**
