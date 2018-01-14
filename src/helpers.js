@@ -34,52 +34,29 @@ export async function optimizeImage (imageData, imageminOptions) {
 }
 
 /**
- * Compiles a regex, glob, function, or an array of any of them to an array of RegExps
+ * Tests a filename to see if it matches any of the given test functions
+ * This function is curried, pass in the first 3 params first, then the next 2
+ * for each test needed
  * @param  {RegExp|RegExp[]|Function|Function[]|String|String[]} rawTestValue
- * @return {RegExp[]|Function[]}
- */
-export function compileRegex (rawTestValue) {
-  const tests = Array.isArray(rawTestValue) ? rawTestValue : [rawTestValue]
-
-  return tests.map((test) => {
-    if (test instanceof RegExp || typeof test === 'function') {
-      // If it's a regex or function, just return it
-      return test
-    } else if (typeof test === 'string') {
-      // If it's a string, let minimatch convert it to a regex
-      return makeRe(test)
-    } else {
-      throw new Error('test parameter must be a regex, glob string, or an array of regexes or glob strings')
-    }
-  })
-}
-
-/**
- * Tests a filename to see if it matches any of the given test globs/regexes
- * @param  {String} filename
- * @param  {Array} regexes
- * @return {Boolean}
- */
-export function testFile (filename, regexes) {
-  for (let regexOrFunc of regexes) {
-    if (regexOrFunc instanceof RegExp && regexOrFunc.test(filename)) {
-      return true
-    } else if (typeof regexOrFunc === 'function' && regexOrFunc() === true) {
-      return true
-    }
-  }
-  return false
-}
-
-/**
- * Tests if a file is within the given sizes
- * @param  {assetSource} assetSource
  * @param  {Number} minFileSize
  * @param  {Number} maxFileSize
  * @return {Boolean}
  */
-export function testFileSize (assetSource, minFileSize, maxFileSize) {
-  return assetSource.length > minFileSize && assetSource.length <= maxFileSize
+export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
+  const testFunctions = compileRegex(rawTestValue)
+  /**
+   * @param  {String}      filename
+   * @param  {assetSource} assetSource
+   * @return {Boolean}
+   */
+  return (filename, assetSource) => {
+    for (let func of testFunctions) {
+      if (func() === true) {
+        return assetSource.length > minFileSize && assetSource.length <= maxFileSize
+      }
+    }
+    return false
+  }
 }
 
 /**
@@ -151,4 +128,29 @@ export async function writeFile (filename, buffer) {
   }
 
   return writeFileAsync(filename, buffer)
+}
+
+/**
+ * Compiles a regex, glob, function, or an array of any of them to an array of functions
+ * @param  {RegExp|RegExp[]|Function|Function[]|String|String[]} rawTestValue
+ * @return {Function[]}
+ */
+function compileRegex (rawTestValue) {
+  const tests = Array.isArray(rawTestValue) ? rawTestValue : [rawTestValue]
+
+  return tests.map((test) => {
+    if (typeof test === 'function') {
+      // if it's a function, just return this
+      return test
+    } else if (test instanceof RegExp) {
+      // If it's a regex return it wrapped in a function
+      return (filename) => test.test(filename)
+    } else if (typeof test === 'string') {
+      // If it's a string, let minimatch convert it to a regex then wrap that in a function
+      const regex = makeRe(test)
+      return (filename) => regex.test(filename)
+    } else {
+      throw new Error('test parameter must be a regex, glob string, function, or an array of any of them')
+    }
+  })
 }

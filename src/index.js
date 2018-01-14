@@ -10,9 +10,7 @@ import imageminJpegtran from 'imagemin-jpegtran'
 import RawSource from 'webpack-sources/lib/RawSource'
 
 import {
-  compileRegex,
-  testFile,
-  testFileSize,
+  buildTestFunction,
   invokeIfFunction,
   getFromCacheIfPossible,
   readFile,
@@ -51,12 +49,10 @@ export default class ImageminPlugin {
     this.options = {
       disable,
       maxConcurrency,
-      minFileSize,
-      maxFileSize,
       imageminOptions: {
         plugins: []
       },
-      testRegexes: compileRegex(test),
+      testFunction: buildTestFunction(test, minFileSize, maxFileSize),
       externalImages,
       cacheFolder
     }
@@ -113,9 +109,7 @@ export default class ImageminPlugin {
    */
   optimizeWebpackImages (throttle, compilation) {
     const {
-      testRegexes,
-      minFileSize,
-      maxFileSize,
+      testFunction,
       cacheFolder
     } = this.options
 
@@ -124,7 +118,7 @@ export default class ImageminPlugin {
     return map(compilation.assets, (asset, filename) => throttle(async () => {
       const assetSource = asset.source()
       // Skip the image if it's not a match for the regex or it's too big/small
-      if (testFile(filename, testRegexes) && testFileSize(assetSource, minFileSize, maxFileSize)) {
+      if (testFunction(filename, assetSource)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, () => {
@@ -148,8 +142,7 @@ export default class ImageminPlugin {
         sources,
         destination
       },
-      minFileSize,
-      maxFileSize,
+      testFunction,
       cacheFolder
     } = this.options
 
@@ -157,7 +150,7 @@ export default class ImageminPlugin {
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
       const fileData = await readFile(filename)
-      if (testFileSize(fileData, minFileSize, maxFileSize)) {
+      if (testFunction(filename, fileData)) {
         const writeFilePath = path.resolve(invokedDestination, filename)
 
         // Use the helper function to get the file from cache if possible, or
