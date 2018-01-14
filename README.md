@@ -62,9 +62,11 @@ When set to `true` it will disable the plugin entirely. This is useful for disab
 **type**: `RegExp` or `String` or `Array`
 **default**: `/.*/`
 
-This plugin will only run on files that match this test. This is similar to the webpack loader `test` option (but is not using the same implementation, so there might be major differences!). This can either be a RegExp object, or a [minimatch glob](https://github.com/isaacs/minimatch) (or an array of either or both).
+This plugin will only run on files that match this test. This is similar to the webpack loader `test` option (but is not using the same implementation, so there might be major differences!). This can either be a RegExp object, a [minimatch glob](https://github.com/isaacs/minimatch), a function which gets the filename and returns `true` if the file should be minified, or an array of any of them.
 
 This can allow you to only run the plugin on specific files, or even include the plugin multiple times for different sets of images and apply different imagemin settings to each.
+
+This will overwrite everything, including the `externalImages` option!
 
 Example:
 
@@ -225,11 +227,12 @@ module.exports = {
 **type**: `String`
 **default**: `''`
 
-*Currently only in 1.6-beta.1 and newer*
-
 Cache already minified images into a `cacheFolder`. On next run plugin will
 check for the cached images first. If cached image exists it will simply use that one.
 Otherwise image will be optimised and written to the `cacheFolder` for later builds.
+
+**Note**: This is a very simple cache implementation, it WILL NOT intelligently clear the
+cache if you update the options in this plugin.
 
 Example:
 
