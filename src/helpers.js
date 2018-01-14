@@ -34,16 +34,16 @@ export async function optimizeImage (imageData, imageminOptions) {
 }
 
 /**
- * Compiles a regex, glob, or an array of globs to an array of RegExps
- * @param  {RegExp|RegExp[]|String|String[]} rawTestValue
- * @return {RegExp[]}
+ * Compiles a regex, glob, function, or an array of any of them to an array of RegExps
+ * @param  {RegExp|RegExp[]|Function|Function[]|String|String[]} rawTestValue
+ * @return {RegExp[]|Function[]}
  */
 export function compileRegex (rawTestValue) {
   const tests = Array.isArray(rawTestValue) ? rawTestValue : [rawTestValue]
 
   return tests.map((test) => {
-    if (test instanceof RegExp) {
-      // If it's a regex, just return it
+    if (test instanceof RegExp || typeof test === 'function') {
+      // If it's a regex or function, just return it
       return test
     } else if (typeof test === 'string') {
       // If it's a string, let minimatch convert it to a regex
@@ -61,8 +61,10 @@ export function compileRegex (rawTestValue) {
  * @return {Boolean}
  */
 export function testFile (filename, regexes) {
-  for (let regex of regexes) {
-    if (regex.test(filename)) {
+  for (let regexOrFunc of regexes) {
+    if (regexOrFunc instanceof RegExp && regexOrFunc.test(filename)) {
+      return true
+    } else if (typeof regexOrFunc === 'function' && regexOrFunc() === true) {
       return true
     }
   }
