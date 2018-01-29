@@ -39,11 +39,7 @@ export default class ImageminPlugin {
       },
       svgo = {},
       pngquant = null,
-      externalImages = {
-        sources: [],
-        destination: '.'
-      },
-      context = '.',
+      externalImages = {},
       cacheFolder = null
     } = options
 
@@ -54,8 +50,12 @@ export default class ImageminPlugin {
         plugins: []
       },
       testFunction: buildTestFunction(test, minFileSize, maxFileSize),
-      externalImages,
-      context,
+      externalImages: {
+        context: '.',
+        sources: [],
+        destination: '.',
+        ...externalImages
+      },
       cacheFolder
     }
 
@@ -78,8 +78,8 @@ export default class ImageminPlugin {
   }
 
   apply (compiler) {
-    // Add context to the options object
-    this.options.context = path.join(compiler.options.context, this.options.context)
+    // Add the compiler options to my options
+    this.options.compilerOptions = compiler.options
 
     // If disabled, short-circuit here and just return
     if (this.options.disable === true) return null
@@ -143,20 +143,23 @@ export default class ImageminPlugin {
    */
   optimizeExternalImages (throttle) {
     const {
+      compilerOptions,
       externalImages: {
+        context,
         sources,
         destination
       },
-      context,
       testFunction,
       cacheFolder
     } = this.options
 
-    const invokedDestination = path.resolve(context, invokeIfFunction(destination))
+    const fullContext = path.join(compilerOptions.context, context)
+
+    const invokedDestination = path.resolve(fullContext, invokeIfFunction(destination))
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
-      const relativeFilePath = path.relative(context, filename)
-      const fileData = await readFile(path.resolve(context, relativeFilePath))
+      const relativeFilePath = path.relative(fullContext, filename)
+      const fileData = await readFile(path.resolve(fullContext, relativeFilePath))
       if (testFunction(filename, fileData)) {
         const writeFilePath = path.join(invokedDestination, relativeFilePath)
 
