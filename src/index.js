@@ -43,6 +43,7 @@ export default class ImageminPlugin {
         sources: [],
         destination: '.'
       },
+      context = '.',
       cacheFolder = null
     } = options
 
@@ -54,6 +55,7 @@ export default class ImageminPlugin {
       },
       testFunction: buildTestFunction(test, minFileSize, maxFileSize),
       externalImages,
+      context,
       cacheFolder
     }
 
@@ -77,7 +79,7 @@ export default class ImageminPlugin {
 
   apply (compiler) {
     // Add context to the options object
-    this.options.context = compiler.options.context
+    this.options.context = path.join(compiler.options.context, this.options.context)
 
     // If disabled, short-circuit here and just return
     if (this.options.disable === true) return null
@@ -113,7 +115,6 @@ export default class ImageminPlugin {
   optimizeWebpackImages (throttle, compilation) {
     const {
       testFunction,
-      context,
       cacheFolder
     } = this.options
 
@@ -125,7 +126,7 @@ export default class ImageminPlugin {
       if (testFunction(filename, assetSource)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(context, cacheFolder, filename, () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, () => {
           return optimizeImage(assetSource, this.options.imageminOptions)
         })
 
@@ -161,7 +162,7 @@ export default class ImageminPlugin {
 
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(context, cacheFolder, relativeFilePath, async () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, relativeFilePath, async () => {
           return optimizeImage(fileData, this.options.imageminOptions)
         })
 

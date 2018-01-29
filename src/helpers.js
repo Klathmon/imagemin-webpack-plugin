@@ -86,16 +86,15 @@ export function invokeIfFunction (func) {
  * Gets the buffer of the file from cache. If it doesn't exist or the cache is
  * not enabled, it will invoke elseFunc and use it's result as the result of the
  * function, saving the result in the cache
- * @param  {String} context     The webpack context for a "base" path
  * @param  {String} cacheFolder
  * @param  {String} filename
  * @param  {Function} elseFunc
  * @return {Buffer}
  */
-export async function getFromCacheIfPossible (context, cacheFolder, filename, elseFunc) {
+export async function getFromCacheIfPossible (cacheFolder, filename, elseFunc) {
   let cacheFilePath
   if (cacheFolder !== null) {
-    cacheFilePath = path.resolve(context, cacheFolder, hashFilename(filename))
+    cacheFilePath = path.resolve(cacheFolder, hashFilename(filename))
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }
