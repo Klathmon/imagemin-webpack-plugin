@@ -76,10 +76,11 @@ export default class ImageminPlugin {
   }
 
   apply (compiler) {
-    const options = this.options
+    // Add context to the options object
+    this.options.context = compiler.options.context
 
     // If disabled, short-circuit here and just return
-    if (options.disable === true) return null
+    if (this.options.disable === true) return null
 
     // Access the assets once they have been assembled
     compiler.plugin('emit', async (compilation, callback) => {
@@ -89,8 +90,10 @@ export default class ImageminPlugin {
       try {
         // Optimise all images at the same time (throttled to maxConcurrency)
         // and await until all of them to complete
-        const promises = this.optimizeWebpackImages(throttle, compilation).concat(this.optimizeExternalImages(throttle))
-        await Promise.all(promises)
+        await Promise.all([
+          ...this.optimizeWebpackImages(throttle, compilation),
+          ...this.optimizeExternalImages(throttle)
+        ])
 
         // At this point everything is done, so call the callback without anything in it
         callback()
@@ -110,6 +113,7 @@ export default class ImageminPlugin {
   optimizeWebpackImages (throttle, compilation) {
     const {
       testFunction,
+      context,
       cacheFolder
     } = this.options
 
@@ -121,7 +125,7 @@ export default class ImageminPlugin {
       if (testFunction(filename, assetSource)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(context, cacheFolder, filename, () => {
           return optimizeImage(assetSource, this.options.imageminOptions)
         })
 
@@ -142,20 +146,22 @@ export default class ImageminPlugin {
         sources,
         destination
       },
+      context,
       testFunction,
       cacheFolder
     } = this.options
 
-    const invokedDestination = invokeIfFunction(destination)
+    const invokedDestination = path.join(context, invokeIfFunction(destination))
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
-      const fileData = await readFile(filename)
+      const relativeFilePath = path.relative(context, filename)
+      const fileData = await readFile(path.join(context, relativeFilePath))
       if (testFunction(filename, fileData)) {
-        const writeFilePath = path.resolve(invokedDestination, filename)
+        const writeFilePath = path.join(invokedDestination, relativeFilePath)
 
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, async () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, relativeFilePath, async () => {
           return optimizeImage(fileData, this.options.imageminOptions)
         })
 

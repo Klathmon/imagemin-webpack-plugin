@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 import { makeRe } from 'minimatch'
 import imagemin from 'imagemin'
 import mkdirp from 'mkdirp'
@@ -60,6 +61,15 @@ export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
 }
 
 /**
+ * hashes a filename to make sure I can uniquely store a file even with absolute paths
+ * @param  {string} filePath The path (relative or absolute) to the file
+ * @return {string}          A hash of the full file path
+ */
+export async function hashFilename (filePath) {
+  return crypto.createHash('sha1').update(filePath).digest('hex')
+}
+
+/**
  * Invokes the passed in argument if it's a function
  * @param  {Function|Any}  func
  * @return {Any}
@@ -76,15 +86,16 @@ export function invokeIfFunction (func) {
  * Gets the buffer of the file from cache. If it doesn't exist or the cache is
  * not enabled, it will invoke elseFunc and use it's result as the result of the
  * function, saving the result in the cache
+ * @param  {String} context     The webpack context for a "base" path
  * @param  {String} cacheFolder
  * @param  {String} filename
  * @param  {Function} elseFunc
  * @return {Buffer}
  */
-export async function getFromCacheIfPossible (cacheFolder, filename, elseFunc) {
+export async function getFromCacheIfPossible (context, cacheFolder, filename, elseFunc) {
   let cacheFilePath
   if (cacheFolder !== null) {
-    cacheFilePath = path.resolve(cacheFolder, filename)
+    cacheFilePath = path.join(context, cacheFolder, hashFilename(filename))
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }
