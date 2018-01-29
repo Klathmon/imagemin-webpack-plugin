@@ -65,7 +65,7 @@ export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
  * @param  {string} filePath The path (relative or absolute) to the file
  * @return {string}          A hash of the full file path
  */
-export async function hashFilename (filePath) {
+export function hashFilename (filePath) {
   return crypto.createHash('sha1').update(filePath).digest('hex')
 }
 
@@ -95,7 +95,7 @@ export function invokeIfFunction (func) {
 export async function getFromCacheIfPossible (context, cacheFolder, filename, elseFunc) {
   let cacheFilePath
   if (cacheFolder !== null) {
-    cacheFilePath = path.join(context, cacheFolder, hashFilename(filename))
+    cacheFilePath = path.resolve(context, cacheFolder, hashFilename(filename))
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }

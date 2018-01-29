@@ -151,17 +151,17 @@ export default class ImageminPlugin {
       cacheFolder
     } = this.options
 
-    const invokedDestination = path.join(context, invokeIfFunction(destination))
+    const invokedDestination = path.resolve(context, invokeIfFunction(destination))
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
       const relativeFilePath = path.relative(context, filename)
-      const fileData = await readFile(path.join(context, relativeFilePath))
+      const fileData = await readFile(path.resolve(context, relativeFilePath))
       if (testFunction(filename, fileData)) {
         const writeFilePath = path.join(invokedDestination, relativeFilePath)
 
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, relativeFilePath, async () => {
+        let optimizedImageBuffer = await getFromCacheIfPossible(context, cacheFolder, relativeFilePath, async () => {
           return optimizeImage(fileData, this.options.imageminOptions)
         })
 
