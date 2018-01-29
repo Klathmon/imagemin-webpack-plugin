@@ -155,7 +155,7 @@ export default class ImageminPlugin {
 
     const fullContext = path.join(compilerOptions.context, context)
 
-    const invokedDestination = path.resolve(fullContext, invokeIfFunction(destination))
+    const invokedDestination = path.resolve(invokeIfFunction(destination))
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
       const relativeFilePath = path.relative(fullContext, filename)
