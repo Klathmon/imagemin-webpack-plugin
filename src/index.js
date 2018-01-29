@@ -156,7 +156,7 @@ export default class ImageminPlugin {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, filename, async () => {
-          return optimizeImage(await readFile(filename), this.options.imageminOptions)
+          return optimizeImage(fileData, this.options.imageminOptions)
         })
 
         // Write the file to the destination when done
