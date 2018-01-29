@@ -164,10 +164,12 @@ module.exports = {
 #### options.externalImages
 
 **type**: `Object`
-**default**: `{ sources: [], destination: null }`
+**default**: `{ context: '.', sources: [], destination: null }`
 
 Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
 If a destination value is not supplied the files are optimized in place. You can optionally set either of these to a function which will be invoked at the last possible second before optimization to grab files that might not exist at the time of writing the config (see #37 for more info).
+
+The paths will work based on the webpack's (and this plugin's) `context` option, so in the following example, the files will be read from `./src/images/**/*.png` and will be written to `.src/public/images/**/*.png`
 
 Example:
 
@@ -179,6 +181,7 @@ module.exports = {
   plugins: [
     new ImageminPlugin({
       externalImages: {
+        context: 'src', // Important! This tells the plugin where to "base" the paths at
         sources: glob.sync('src/images/**/*.png'),
         destination: 'src/public/images'
       }
@@ -186,6 +189,7 @@ module.exports = {
   ]
 }
 ```
+
 #### options.minFileSize
 
 **type**: `Integer`
@@ -232,7 +236,7 @@ check for the cached images first. If cached image exists it will simply use tha
 Otherwise image will be optimised and written to the `cacheFolder` for later builds.
 
 **Note**: This is a very simple cache implementation, it WILL NOT intelligently clear the
-cache if you update the options in this plugin.
+cache if you update the options in this plugin. There also might be significantly more files in the cache than you have images, this is normal, and a side-effect of how I'm deferring to `imagemin` to determine if a file is an image or not. It can be prevented by setting a good `test` regex.
 
 Example:
 
