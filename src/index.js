@@ -153,7 +153,7 @@ export default class ImageminPlugin {
       cacheFolder
     } = this.options
 
-    const fullContext = path.join(compilerOptions.context, context)
+    const fullContext = path.resolve(compilerOptions.context, context)
 
     const invokedDestination = path.resolve(invokeIfFunction(destination))
 
