@@ -85,7 +85,7 @@ export default class ImageminPlugin {
     if (this.options.disable === true) return null
 
     // Access the assets once they have been assembled
-    compiler.plugin('emit', async (compilation, callback) => {
+    const onEmit = async (compilation, callback) => {
       // Create a throttle object which will limit the number of concurrent processes running
       const throttle = createThrottle(this.options.maxConcurrency)
 
@@ -103,7 +103,16 @@ export default class ImageminPlugin {
         // if at any point we hit a snag, pass the error on to webpack
         callback(err)
       }
-    })
+    }
+
+    // Check if the webpack 4 plugin API is available
+    if (compiler.hooks) {
+      // Register emit event listener for webpack 4
+      compiler.hooks.emit.tapAsync(this.constructor.name, onEmit)
+    } else {
+      // Register emit event listener for older webpack versions
+      compiler.plugin('emit', onEmit)
+    }
   }
 
   /**
