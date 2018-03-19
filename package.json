@@ -1,14 +1,14 @@
 {
   "name": "imagemin-webpack-plugin",
-  "version": "1.5.2",
+  "version": "2.1.0",
   "description": "Webpack plugin to compress images",
-  "main": "index.es5.js",
+  "main": "dist/index.js",
   "scripts": {
-    "clean": "gulp clean",
-    "test": "gulp test",
-    "build": "gulp build",
-    "prepublish": "gulp build",
-    "preversion": "gulp build"
+    "clean": "rimraf dist",
+    "test": "standard src/*",
+    "build": "babel src --out-dir dist --source-maps",
+    "prepare": "babel src --out-dir dist --source-maps",
+    "preversion": "babel src --out-dir dist --source-maps"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -44,21 +44,25 @@
     "async-throttle": "^1.1.0",
     "babel-runtime": "^6.18.0",
     "imagemin": "^5.3.1",
+    "imagemin-gifsicle": "^5.1.0",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-optipng": "^5.1.0",
+    "imagemin-pngquant": "^5.0.1",
+    "imagemin-svgo": "^6.0.0",
     "lodash.map": "^4.6.0",
     "minimatch": "^3.0.4",
-    "webpack-sources": "^1.0.1"
+    "mkdirp": "^0.5.1",
+    "util.promisify": "^1.0.0",
+    "webpack-sources": "^1.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "gulp": "^3.9.1",
-    "gulp-npm-script-sync": "^1.1.0",
-    "gulp-run-command": "^0.0.7",
-    "np": "^2.16.0",
-    "rimraf": "^2.6.1",
+    "babel-preset-env": "^1.6.1",
+    "np": "^2.18.3",
+    "rimraf": "^2.6.2",
     "standard": "^10.0.2"
   }
 }
