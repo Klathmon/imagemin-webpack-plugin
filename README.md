@@ -139,7 +139,7 @@ Passes the given object to [`imagemin-pngquant`](https://github.com/imagemin/ima
 
 Include any additional plugins that you want to work with imagemin here. By default the above are included, but if you want (or need to) you can disable them (by setting them to `null`) and include them yourself here.
 
-A list of possible imagemin plugins can be found [here](https://www.npmjs.com/browse/keyword/imageminplugin).
+A list of possible imagemin plugins can be found [here](https://www.npmjs.com/search?q=imagemin%20plugin).
 
 Example:
 
