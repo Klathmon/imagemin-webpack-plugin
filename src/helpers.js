@@ -62,11 +62,11 @@ export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
 
 /**
  * hashes a filename to make sure I can uniquely store a file even with absolute paths
- * @param  {string} filePath The path (relative or absolute) to the file
+ * @param  {string} content Body
  * @return {string}          A hash of the full file path
  */
-export function hashFilename (filePath) {
-  return crypto.createHash('sha1').update(filePath).digest('hex')
+export function hashContent (content) {
+  return crypto.createHash('sha1').update(content).digest('hex')
 }
 
 /**
@@ -87,14 +87,14 @@ export function invokeIfFunction (func) {
  * not enabled, it will invoke elseFunc and use it's result as the result of the
  * function, saving the result in the cache
  * @param  {String} cacheFolder
- * @param  {String} filename
+ * @param  {String} content
  * @param  {Function} elseFunc
  * @return {Buffer}
  */
-export async function getFromCacheIfPossible (cacheFolder, filename, elseFunc) {
+export async function getFromCacheIfPossible (cacheFolder, content, elseFunc) {
   let cacheFilePath
   if (cacheFolder !== null) {
-    cacheFilePath = path.resolve(cacheFolder, hashFilename(filename))
+    cacheFilePath = path.resolve(cacheFolder, hashContent(content))
     if (await exists(cacheFilePath)) {
       return readFile(cacheFilePath)
     }
