@@ -1,6 +1,6 @@
 {
   "name": "imagemin-webpack-plugin",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Webpack plugin to compress images",
   "main": "dist/index.js",
   "scripts": {
