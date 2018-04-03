@@ -61,9 +61,9 @@ export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
 }
 
 /**
- * hashes a filename to make sure I can uniquely store a file even with absolute paths
- * @param  {string} content Body
- * @return {string}          A hash of the full file path
+ * hashes file contents to make sure I can uniquely store a file even with absolute paths
+ * @param  {string} content  File contents
+ * @return {string}          A hash of the full file contents
  */
 export function hashContent (content) {
   return crypto.createHash('sha1').update(content).digest('hex')
