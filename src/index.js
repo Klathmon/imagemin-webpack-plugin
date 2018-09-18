@@ -15,7 +15,8 @@ import {
   getFromCacheIfPossible,
   readFile,
   writeFile,
-  optimizeImage
+  optimizeImage,
+  templatedFilePath
 } from './helpers.js'
 
 export default class ImageminPlugin {
@@ -54,6 +55,7 @@ export default class ImageminPlugin {
         context: '.',
         sources: [],
         destination: '.',
+        fileName: null,
         ...externalImages
       },
       cacheFolder
@@ -156,7 +158,8 @@ export default class ImageminPlugin {
       externalImages: {
         context,
         sources,
-        destination
+        destination,
+        fileName
       },
       testFunction,
       cacheFolder
@@ -167,16 +170,20 @@ export default class ImageminPlugin {
     const invokedDestination = path.resolve(invokeIfFunction(destination))
 
     return map(invokeIfFunction(sources), (filename) => throttle(async () => {
-      const relativeFilePath = path.relative(fullContext, filename)
+      let relativeFilePath = path.relative(fullContext, filename)
       const fileData = await readFile(path.resolve(fullContext, relativeFilePath))
       if (testFunction(filename, fileData)) {
-        const writeFilePath = path.join(invokedDestination, relativeFilePath)
-
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, fileData, async () => {
           return optimizeImage(fileData, this.options.imageminOptions)
         })
+
+        if (fileName) {
+          relativeFilePath = templatedFilePath(fileName, relativeFilePath)
+        }
+
+        const writeFilePath = path.join(invokedDestination, relativeFilePath)
 
         // Write the file to the destination when done
         return writeFile(writeFilePath, optimizedImageBuffer)
