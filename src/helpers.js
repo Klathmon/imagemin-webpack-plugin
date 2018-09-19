@@ -164,3 +164,26 @@ function compileRegex (rawTestValue) {
     }
   })
 }
+
+/**
+ * Replaces file name templates for a given path. Inspired by webpack's output.filename config.
+ * @param {String|Function} fileName
+ * @param {String} filePath
+ * @returns {String}
+ */
+export function templatedFilePath (fileName, filePath) {
+  if (typeof fileName === 'function') {
+    return fileName(filePath)
+  }
+
+  if (typeof fileName === 'string') {
+    const originalFilePath = filePath
+
+    return fileName
+      .replace('[path]', originalFilePath.split(path.basename(originalFilePath))[0])
+      .replace('[name]', path.basename(originalFilePath, path.extname(originalFilePath)))
+      .replace('[ext]', path.extname(originalFilePath).split('.')[1])
+  }
+
+  throw new Error('fileName parameter must be a string or a function')
+}

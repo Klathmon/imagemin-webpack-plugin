@@ -164,7 +164,7 @@ module.exports = {
 #### options.externalImages
 
 **type**: `Object`
-**default**: `{ context: '.', sources: [], destination: null }`
+**default**: `{ context: '.', sources: [], destination: null, fileName: null }`
 
 Include any external images (those not included in webpack's compilation assets) that you want to be parsed by imagemin.
 If a destination value is not supplied the files are optimized in place. You can optionally set either of these to a function which will be invoked at the last possible second before optimization to grab files that might not exist at the time of writing the config (see #37 for more info).
@@ -183,7 +183,8 @@ module.exports = {
       externalImages: {
         context: 'src', // Important! This tells the plugin where to "base" the paths at
         sources: glob.sync('src/images/**/*.png'),
-        destination: 'src/public/images'
+        destination: 'src/public/images',
+        fileName: '[path][name].[ext]' // (filePath) => filePath.replace('jpg', 'webp') is also possible
       }
     })
   ]
