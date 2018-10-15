@@ -46,6 +46,8 @@ module.exports = {
 }
 ```
 
+*Note the order of the plugins matters. `ImageminWebpackPlugin` must be placed after `CopyWebpackPlugin` (or any other plugins that deal with images) in `plugins` array.*
+
 ## API
 
 ### new ImageminPlugin(options)
@@ -87,8 +89,6 @@ module.exports = {
   ]
 }
 ```
-
-Note the order of the plugins matters. `CopyWebpackPlugin` must be before `ImageminWebpackPlugin` in the `plugins` array.
 
 #### options.maxConcurrency
 
