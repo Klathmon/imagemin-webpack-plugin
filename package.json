@@ -58,9 +58,6 @@
     "util.promisify": "^1.0.0",
     "webpack-sources": "^1.1.0"
   },
-  "resolutions": {
-    "tunnel-agent": ">=0.6.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
