@@ -1,3 +1,8 @@
+import { Options as GifsicleOptions } from 'imagemin-gifsicle';
+import { Options as JpegTranOptions } from 'imagemin-jpegtran';
+import { Options as OptiPngOptions } from 'imagemin-optipng';
+import { Options as SvgoOptions } from 'imagemin-svgo';
+
 import { Plugin } from 'webpack';
 
 export default ImageminWebpackPugin;
@@ -9,7 +14,7 @@ declare class ImageminWebpackPugin extends Plugin {
 declare namespace ImageminWebpackPugin {
   type TestOption = RegExp | string | (() => boolean);
 
-  // Keeping it as generic object as including all the other types would be too heavy
+  // Generic options for plugins missing typings
   interface ExternalOptions {
     [key: string]: any;
   }
@@ -18,10 +23,10 @@ declare namespace ImageminWebpackPugin {
     disable?: boolean;
     test?: TestOption | TestOption[];
     maxConcurrency?: number;
-    optipng?: ExternalOptions | null;
-    gifsicle?: ExternalOptions | null;
-    jpegtran?: ExternalOptions | null;
-    svgo?: ExternalOptions | null;
+    optipng?: OptiPngOptions | null;
+    gifsicle?: GifsicleOptions | null;
+    jpegtran?: JpegTranOptions | null;
+    svgo?: SvgoOptions | null;
     pngquant?: ExternalOptions | null;
     plugins?: Array<Promise<Buffer>> | [];
   }
