@@ -5,14 +5,14 @@ import { Options as SvgoOptions } from 'imagemin-svgo';
 
 import { Plugin } from 'webpack';
 
-export default ImageminWebpackPugin;
+export default ImageminWebpackPlugin;
 
-declare class ImageminWebpackPugin extends Plugin {
-  constructor(options: ImageminWebpackPugin.Options);
+declare class ImageminWebpackPlugin extends Plugin {
+  constructor(options: ImageminWebpackPlugin.Options);
 }
 
-declare namespace ImageminWebpackPugin {
-  type TestOption = RegExp | string | (() => boolean);
+declare namespace ImageminWebpackPlugin {
+  type TestOption = RegExp | string | ((file: string) => boolean);
 
   // Generic options for plugins missing typings
   interface ExternalOptions {
@@ -28,6 +28,15 @@ declare namespace ImageminWebpackPugin {
     jpegtran?: JpegTranOptions | null;
     svgo?: SvgoOptions | null;
     pngquant?: ExternalOptions | null;
-    plugins?: Array<Promise<Buffer>> | [];
+    plugins?: Promise<Buffer>[] | [];
+    externalImages?: {
+      context: string;
+      sources: string[] | (() => string[]);
+      destination?: string | (() => string);
+      fileName?: string | null;
+    };
+    minFileSize?: number;
+    maxFileSize?: number;
+    cacheFolder?: string;
   }
 }
