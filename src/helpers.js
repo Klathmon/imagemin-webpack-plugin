@@ -11,7 +11,7 @@ const writeFileAsync = promisify(fs.writeFile)
 const mkdirpAsync = promisify(mkdirp)
 
 /**
- * Optimizes a single image, returning the orignal if the "optimized" version is larger
+ * Optimizes a single image
  * @param  {Object}  imageData
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
@@ -19,19 +19,12 @@ const mkdirpAsync = promisify(mkdirp)
 export async function optimizeImage (imageData, imageminOptions) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
-  // And get the original size for comparison later to make sure it actually got smaller
-  const originalSize = imageBuffer.length
 
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
 
-  // If the optimization actually produced a smaller file, then return the optimized version
-  if (optimizedImageBuffer.length < originalSize) {
-    return optimizedImageBuffer
-  } else {
-    // otherwize return the orignal
-    return imageBuffer
-  }
+  // Return the optimized version
+  return optimizedImageBuffer
 }
 
 /**
