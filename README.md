@@ -254,6 +254,15 @@ module.exports = {
 }
 ```
 
+#### options.onlyUseIfSmaller
+
+**type**: `Boolean`
+**default**: `false`
+
+If set to `true`, this plugin will use the original image if the optimization process makes it larger.
+
+**`true` used to be the default behavior in version 2 of this plugin!**
+
 ### Troubleshooting
 
 If you get an error similar to `Error in parsing SVG: Unquoted attribute value` while using SVGO, you most likely have un-quoted attributes in the SVG image. A workaround can be found [here](https://github.com/Klathmon/imagemin-webpack-plugin/issues/25) from @vzaidman. They also made an issue upstream which should fix it at the source [here](https://github.com/svg/svgo/issues/678).
