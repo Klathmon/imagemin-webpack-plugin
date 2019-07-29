@@ -26,12 +26,11 @@ export async function optimizeImage (imageData, imageminOptions) {
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
 
-  // If the optimization actually produced a smaller file, then return the optimized version
-  if (imageminOptions.onlyUseIfSmaller && optimizedImageBuffer.length < originalSize) {
-    return optimizedImageBuffer
-  } else {
-    // otherwize return the orignal
+  // If onlyUseIfSmaller is true, and the optimization actually produced a LARGER file, then return the original version
+  if (imageminOptions.onlyUseIfSmaller && optimizedImageBuffer.length > originalSize) {
     return imageBuffer
+  } else {
+    return optimizedImageBuffer
   }
 }
 
