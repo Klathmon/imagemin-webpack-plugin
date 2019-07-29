@@ -21,7 +21,6 @@ import {
 
 export default class ImageminPlugin {
   constructor (options = {}) {
-    // I love ES2015!
     const {
       disable = false,
       test = /.*/,
@@ -41,7 +40,8 @@ export default class ImageminPlugin {
       svgo = {},
       pngquant = null,
       externalImages = {},
-      cacheFolder = null
+      cacheFolder = null,
+      onlyUseIfSmaller = false
     } = options
 
     this.options = {
@@ -58,7 +58,8 @@ export default class ImageminPlugin {
         fileName: null,
         ...externalImages
       },
-      cacheFolder
+      cacheFolder,
+      onlyUseIfSmaller
     }
 
     // As long as the options aren't `null` then include the plugin. Let the destructuring above
