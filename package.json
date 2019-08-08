@@ -55,7 +55,7 @@
     "imagemin": "^6.1.0",
     "imagemin-gifsicle": "^6.0.1",
     "imagemin-jpegtran": "^6.0.0",
-    "imagemin-optipng": "^6.0.0",
+    "imagemin-optipng": "^7.0.0",
     "imagemin-pngquant": "^6.0.0",
     "imagemin-svgo": "^7.0.0",
     "lodash.map": "^4.6.0",
