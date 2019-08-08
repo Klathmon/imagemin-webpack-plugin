@@ -15,7 +15,7 @@
     "prepublishOnly": "babel src --out-dir dist --copy-files --source-maps"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8.0.0"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
         "env",
         {
           "targets": {
-            "node": 4
+            "node": 8
           }
         }
       ]
