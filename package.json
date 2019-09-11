@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "test": "standard src/*",
+    "test": "standard src/*.js ",
     "build": "babel src --out-dir dist --copy-files --source-maps",
     "prepublishOnly": "babel src --out-dir dist --copy-files --source-maps"
   },
