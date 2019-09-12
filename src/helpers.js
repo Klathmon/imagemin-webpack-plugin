@@ -16,7 +16,7 @@ const mkdirpAsync = promisify(mkdirp)
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-export async function optimizeImage (imageData, imageminOptions) {
+export async function optimizeImage (imageData, imageminOptions, sizeInfoLog) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
   // And get the original size for comparison later to make sure it actually got smaller
@@ -24,6 +24,9 @@ export async function optimizeImage (imageData, imageminOptions) {
 
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
+  if (sizeInfoLog) {
+    
+  }
 
   // If the optimization actually produced a smaller file, then return the optimized version
   if (optimizedImageBuffer.length < originalSize) {

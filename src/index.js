@@ -41,7 +41,8 @@ export default class ImageminPlugin {
       svgo = {},
       pngquant = null,
       externalImages = {},
-      cacheFolder = null
+      cacheFolder = null,
+      sizeInfo = false
     } = options
 
     this.options = {
@@ -58,7 +59,8 @@ export default class ImageminPlugin {
         fileName: null,
         ...externalImages
       },
-      cacheFolder
+      cacheFolder,
+      sizeInfo
     }
 
     // As long as the options aren't `null` then include the plugin. Let the destructuring above
@@ -138,7 +140,7 @@ export default class ImageminPlugin {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, assetSource, () => {
-          return optimizeImage(assetSource, this.options.imageminOptions)
+          return optimizeImage(assetSource, this.options.imageminOptions, this.options.sizeInfo)
         })
 
         // Then write the optimized version back to the asset object as a "raw source"
@@ -176,7 +178,7 @@ export default class ImageminPlugin {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, fileData, async () => {
-          return optimizeImage(fileData, this.options.imageminOptions)
+          return optimizeImage(fileData, this.options.imageminOptions, this.options.sizeInfo)
         })
 
         if (fileName) {
