@@ -5,6 +5,7 @@ import { makeRe } from 'minimatch'
 import imagemin from 'imagemin'
 import mkdirp from 'mkdirp'
 import promisify from 'util.promisify'
+import prettyBytes from 'pretty-bytes'
 
 export const readFile = promisify(fs.readFile)
 const writeFileAsync = promisify(fs.writeFile)
@@ -16,7 +17,7 @@ const mkdirpAsync = promisify(mkdirp)
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-export async function optimizeImage (imageData, imageminOptions, sizeInfoLog) {
+export async function optimizeImage (imageData, fileName, imageminOptions, sizeInfoLog) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
   // And get the original size for comparison later to make sure it actually got smaller
@@ -25,7 +26,15 @@ export async function optimizeImage (imageData, imageminOptions, sizeInfoLog) {
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
   if (sizeInfoLog) {
-    
+    const optimizedSize = optimizedImageBuffer.length
+    const savedBytes = originalSize - optimizedSize
+    var savedPercentage = 0
+    if (originalSize > 0) {
+      savedPercentage = (savedBytes / originalSize) * 100
+      console.log(`{imagemin} ${fileName} - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${Number.parseFloat(savedPercentage).toFixed(1)}%`)
+    } else {
+      console.log(`{imagemin} ${fileName} image already optimized`)
+    }
   }
 
   // If the optimization actually produced a smaller file, then return the optimized version
