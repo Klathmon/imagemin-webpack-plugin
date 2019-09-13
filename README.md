@@ -254,6 +254,33 @@ module.exports = {
 }
 ```
 
+#### options.sizeInfo
+
+**type**: `Boolean`
+**default**: `false``
+
+If you want to print out your savings after minification you can enable / set the sizeInfo option to print out the savings for each file.
+
+Example:
+
+```js
+import resolve from 'path'
+import ImageminPlugin from 'imagemin-webpack-plugin'
+
+module.exports = {
+  plugins: [
+    new ImageminPlugin({
+      sizeInfo: true
+    })
+  ]
+}
+```
+
+Information example:
+```bash
+{imagemin} my_image_was_to_big.jpg - original: 524 kB optimized: 141 kB saved: 73.1%
+```
+
 ### Troubleshooting
 
 If you get an error similar to `Error in parsing SVG: Unquoted attribute value` while using SVGO, you most likely have un-quoted attributes in the SVG image. A workaround can be found [here](https://github.com/Klathmon/imagemin-webpack-plugin/issues/25) from @vzaidman. They also made an issue upstream which should fix it at the source [here](https://github.com/svg/svgo/issues/678).
