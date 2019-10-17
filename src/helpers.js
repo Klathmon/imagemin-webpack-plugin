@@ -12,12 +12,13 @@ const writeFileAsync = promisify(fs.writeFile)
 const mkdirpAsync = promisify(mkdirp)
 
 /**
- * Optimizes a single image, returning the orignal if the "optimized" version is larger
+ * Optimizes a single image
+ * returns the orignal if the "optimized" version is larger (only if the onlyUseIfSmaller option is true)
  * @param  {Object}  imageData
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-export async function optimizeImage (imageData, fileName, imageminOptions, sizeInfoLog) {
+export async function optimizeImage (imageData, { imageminOptions, onlyUseIfSmaller, sizeInfoLog }) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
   // And get the original size for comparison later to make sure it actually got smaller
@@ -25,24 +26,27 @@ export async function optimizeImage (imageData, fileName, imageminOptions, sizeI
 
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
+  const bytesSaved = optimizedImageBuffer.length > originalSize
+  const savedPercentage = Number((bytesSaved / originalSize) * 100).toFixed(1)
+
   if (sizeInfoLog) {
-    const optimizedSize = optimizedImageBuffer.length
-    const savedBytes = originalSize - optimizedSize
-    var savedPercentage = 0
-    if (originalSize > 0) {
-      savedPercentage = (savedBytes / originalSize) * 100
-      console.log(`{imagemin} ${fileName} - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${Number.parseFloat(savedPercentage).toFixed(1)}%`)
+    if (bytesSaved > 0) {
+      console.log(`{imagemin} ${fileName} - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${savedPercentage}%`)
     } else {
-      console.log(`{imagemin} ${fileName} image already optimized`)
+      if (onlyUseIfSmaller) {
+        console.log(`{imagemin} ${fileName} - Optimization made image larger, orignal image will be used. - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(originalSize)} saved: 0%`)
+      } else {
+        console.log(`{imagemin} ${fileName} - WARNING optimization made image larger! - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${savedPercentage}%`)
+      }
     }
   }
 
-  // If the optimization actually produced a smaller file, then return the optimized version
-  if (optimizedImageBuffer.length < originalSize) {
-    return optimizedImageBuffer
-  } else {
-    // otherwize return the orignal
-    return imageBuffer
+  // If onlyUseIfSmaller is true, and the optimization actually produced a LARGER file, then return the original version
+  if (onlyUseIfSmaller && bytesSaved > 0) {
+      return optimizedImageBuffer
+    } else {
+      return imageBuffer
+    }
   }
 }
 

@@ -38,5 +38,7 @@ declare namespace ImageminWebpackPlugin {
     minFileSize?: number;
     maxFileSize?: number;
     cacheFolder?: string;
+    onlyUseIfSmaller?: boolean;
+    sizeInfoLog?: boolean;
   }
 }
