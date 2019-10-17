@@ -141,7 +141,7 @@ export default class ImageminPlugin {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, assetSource, () => {
-          return optimizeImage(assetSource, this.options)
+          return optimizeImage(assetSource, filename, this.options)
         })
 
         // Then write the optimized version back to the asset object as a "raw source"

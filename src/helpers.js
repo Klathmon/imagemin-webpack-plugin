@@ -15,10 +15,11 @@ const mkdirpAsync = promisify(mkdirp)
  * Optimizes a single image
  * returns the orignal if the "optimized" version is larger (only if the onlyUseIfSmaller option is true)
  * @param  {Object}  imageData
+ * @param  {string}  filename
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-export async function optimizeImage (imageData, { imageminOptions, onlyUseIfSmaller, sizeInfoLog }) {
+export async function optimizeImage (imageData, filename, { imageminOptions, onlyUseIfSmaller, sizeInfoLog }) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
   // And get the original size for comparison later to make sure it actually got smaller
@@ -31,22 +32,21 @@ export async function optimizeImage (imageData, { imageminOptions, onlyUseIfSmal
 
   if (sizeInfoLog) {
     if (bytesSaved > 0) {
-      console.log(`{imagemin} ${fileName} - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${savedPercentage}%`)
+      console.log(`{imagemin} ${filename} - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedImageBuffer.length)} saved: ${savedPercentage}%`)
     } else {
       if (onlyUseIfSmaller) {
-        console.log(`{imagemin} ${fileName} - Optimization made image larger, orignal image will be used. - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(originalSize)} saved: 0%`)
+        console.log(`{imagemin} ${filename} - Optimization made image larger, orignal image will be used. - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(originalSize)} saved: 0%`)
       } else {
-        console.log(`{imagemin} ${fileName} - WARNING optimization made image larger! - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedSize)} saved: ${savedPercentage}%`)
+        console.log(`{imagemin} ${filename} - WARNING optimization made image larger! - original: ${prettyBytes(originalSize)} optimized: ${prettyBytes(optimizedImageBuffer.length)} saved: ${savedPercentage}%`)
       }
     }
   }
 
   // If onlyUseIfSmaller is true, and the optimization actually produced a LARGER file, then return the original version
   if (onlyUseIfSmaller && bytesSaved > 0) {
-      return optimizedImageBuffer
-    } else {
-      return imageBuffer
-    }
+    return optimizedImageBuffer
+  } else {
+    return imageBuffer
   }
 }
 
