@@ -17,7 +17,7 @@ const mkdirpAsync = promisify(mkdirp)
  * @param  {Object}  imageminOptions
  * @return {Promise(asset)}
  */
-export async function optimizeImage (imageData, imageminOptions) {
+export async function optimizeImage (imageData, { imageminOptions, onlyUseIfSmaller }) {
   // Ensure that the contents i have are in the form of a buffer
   const imageBuffer = (Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'utf8'))
   // And get the original size for comparison later to make sure it actually got smaller
@@ -27,7 +27,7 @@ export async function optimizeImage (imageData, imageminOptions) {
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
 
   // If onlyUseIfSmaller is true, and the optimization actually produced a LARGER file, then return the original version
-  if (imageminOptions.onlyUseIfSmaller && optimizedImageBuffer.length > originalSize) {
+  if (onlyUseIfSmaller && optimizedImageBuffer.length > originalSize) {
     return imageBuffer
   } else {
     return optimizedImageBuffer
