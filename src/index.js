@@ -41,7 +41,7 @@ export default class ImageminPlugin {
       pngquant = null,
       externalImages = {},
       cacheFolder = null,
-      sizeInfo = false
+      sizeInfo = false,
       onlyUseIfSmaller = false
     } = options
 
@@ -179,7 +179,7 @@ export default class ImageminPlugin {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
         let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, fileData, async () => {
-          return optimizeImage(fileData, path.basename(filename),  this.options)
+          return optimizeImage(fileData, path.basename(filename), this.options)
         })
 
         if (fileName) {

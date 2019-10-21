@@ -26,7 +26,7 @@ export async function optimizeImage (imageData, fileName, { imageminOptions, onl
 
   // Await for imagemin to do the compression
   const optimizedImageBuffer = await imagemin.buffer(imageBuffer, imageminOptions)
-  if (sizeInfoLog) {
+  if (sizeInfo) {
     const optimizedSize = optimizedImageBuffer.length
     const savedBytes = originalSize - optimizedSize
     var savedPercentage = 0
