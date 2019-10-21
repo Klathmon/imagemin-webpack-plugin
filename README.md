@@ -253,7 +253,6 @@ module.exports = {
   ]
 }
 ```
-
 #### options.sizeInfo
 
 **type**: `Boolean`
@@ -280,6 +279,15 @@ Information example:
 ```bash
 {imagemin} my_image_was_to_big.jpg - original: 524 kB optimized: 141 kB saved: 73.1%
 ```
+
+#### options.onlyUseIfSmaller
+
+**type**: `Boolean`
+**default**: `false`
+
+If set to `true`, this plugin will use the original image if the optimization process makes it larger.
+
+**`true` used to be the default behavior in version 2 of this plugin!**
 
 ### Troubleshooting
 
