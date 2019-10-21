@@ -253,6 +253,32 @@ module.exports = {
   ]
 }
 ```
+#### options.sizeInfo
+
+**type**: `Boolean`
+**default**: `false``
+
+If you want to print out your savings after minification you can enable / set the sizeInfo option to print out the savings for each file.
+
+Example:
+
+```js
+import resolve from 'path'
+import ImageminPlugin from 'imagemin-webpack-plugin'
+
+module.exports = {
+  plugins: [
+    new ImageminPlugin({
+      sizeInfo: true
+    })
+  ]
+}
+```
+
+Information example:
+```bash
+{imagemin} my_image_was_to_big.jpg - original: 524 kB optimized: 141 kB saved: 73.1%
+```
 
 #### options.onlyUseIfSmaller
 
