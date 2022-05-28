@@ -51,7 +51,7 @@ export function buildTestFunction (rawTestValue, minFileSize, maxFileSize) {
    * @return {Boolean}
    */
   return (filename, assetSource) => {
-    for (let func of testFunctions) {
+    for (const func of testFunctions) {
       if (func(filename) === true) {
         return assetSource.length > minFileSize && assetSource.length <= maxFileSize
       }

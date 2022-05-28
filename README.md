@@ -10,7 +10,7 @@ This is a simple plugin that uses [Imagemin](https://github.com/imagemin/imagemi
 
 `npm install imagemin-webpack-plugin`
 
-Requires node >=4.0.0
+Requires node >=14.0.0
 
 ## Example Usage
 
