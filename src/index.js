@@ -1,12 +1,12 @@
-import path from 'path'
-import { cpus } from 'os'
-import map from 'lodash.map'
-import imageminSvgo from 'imagemin-svgo'
 import createThrottle from 'async-throttle'
+import imageminSvgo from 'imagemin-svgo'
 import imageminOptipng from 'imagemin-optipng'
 import imageminPngquant from 'imagemin-pngquant'
 import imageminGifsicle from 'imagemin-gifsicle'
 import imageminJpegtran from 'imagemin-jpegtran'
+import map from 'lodash.map'
+import path from 'path'
+import { cpus } from 'os'
 import RawSource from 'webpack-sources/lib/RawSource'
 
 import {
@@ -64,7 +64,7 @@ export default class ImageminPlugin {
 
     // As long as the options aren't `null` then include the plugin. Let the destructuring above
     // control whether the plugin is included by default or not.
-    for (let [plugin, pluginOptions] of [
+    for (const [plugin, pluginOptions] of [
       [imageminOptipng, optipng],
       [imageminGifsicle, gifsicle],
       [imageminJpegtran, jpegtran],
@@ -138,7 +138,7 @@ export default class ImageminPlugin {
       if (testFunction(filename, assetSource)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, assetSource, () => {
+        const optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, assetSource, () => {
           return optimizeImage(assetSource, this.options)
         })
 
@@ -176,7 +176,7 @@ export default class ImageminPlugin {
       if (testFunction(filename, fileData)) {
         // Use the helper function to get the file from cache if possible, or
         // run the optimize function and store it in the cache when done
-        let optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, fileData, async () => {
+        const optimizedImageBuffer = await getFromCacheIfPossible(cacheFolder, fileData, async () => {
           return optimizeImage(fileData, this.options.imageminOptions)
         })
 
